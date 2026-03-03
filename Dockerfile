@@ -10,6 +10,10 @@ RUN ./gradlew clean build -x test --no-daemon
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
+#강사님 요청 설정(환경변수 및 포트)
+ENV DB_DDL_AUTO=none
+EXPOSE 8080
+
 COPY --from=build /app/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
