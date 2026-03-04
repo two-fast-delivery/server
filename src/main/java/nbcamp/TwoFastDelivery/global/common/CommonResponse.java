@@ -7,7 +7,6 @@ import lombok.Getter;
 
 /**
  * 프로젝트 공통 응답 포맷
- *
  * success: 성공 여부
  * message: 응답 메시지
  * errorCode: 실패일 때 에러 코드(성공이면 null)
