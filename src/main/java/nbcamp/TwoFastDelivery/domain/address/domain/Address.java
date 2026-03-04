@@ -17,13 +17,13 @@ public class Address extends BaseEntity {
     @EmbeddedId
     private AddressId id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String alias;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String detailAddress;
 
     @Builder
@@ -55,5 +55,9 @@ public class Address extends BaseEntity {
         Assert.hasText(alias, "배송지 별칭은 필수입니다.");
         Assert.hasText(address, "기본 주소는 필수입니다.");
         Assert.hasText(detailAddress, "상세 주소는 필수입니다.");
+
+        Assert.isTrue(alias.length() <= 50, "별칭은 50자 이내여야 합니다.");
+        Assert.isTrue(address.length() <= 255, "주소는 255자 이내여야 합니다.");
+        Assert.isTrue(detailAddress.length() <= 255, "상세 주소는 255자 이내여야 합니다.");
     }
 }
