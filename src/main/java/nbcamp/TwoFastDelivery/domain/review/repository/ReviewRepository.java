@@ -1,4 +1,4 @@
 package nbcamp.TwoFastDelivery.domain.review.repository;
 
-public class ReviewRepository {
+public interface ReviewRepository {
 }
