@@ -7,17 +7,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 
+@Getter
 @Entity
-    @Table(name = "p_store")
-    public class Store {
+@Table(name = "p_store")
+public class Store extends BaseEntity {
         @Id
         @Column(name = "id", nullable = false, columnDefinition = "uuid")
         private UUID id;
         
         @Column(name = "user_id", nullable = false, columnDefinition = "uuid")
-        private UUID user_id;
-
+        private UUID userId;
         @Column(name = "name", nullable = false)
         private String name;
         
@@ -50,7 +52,6 @@ import jakarta.persistence.Table;
 
         @Column(name = "review_count", columnDefinition = "int default 0")
         private Integer review_count;
-
 
         // 기본 정보 변경
         public void changeBasicInfo(String name, String address, String phone, String thumbnail_url, String open_time, String close_time, String description) {
