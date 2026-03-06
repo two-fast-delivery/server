@@ -1,5 +1,6 @@
 package nbcamp.TwoFastDelivery.domain.review.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewRequestDto;
 import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewResponseDto;
@@ -21,7 +22,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId, @RequestBody CreateReviewRequestDto requestDto) {
+    public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
         CreateReviewResponseDto data = reviewService.createReview(userId, requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
