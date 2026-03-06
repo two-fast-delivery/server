@@ -76,4 +76,33 @@ public class Store extends BaseEntity {
                 id = UUID.randomUUID();
             }
         }
+
+        public static Store create(
+            UUID userId,
+            String name,
+            String address,
+            String phone,
+            UUID categoryId,
+            String thumbnailUrl,
+            String openTime,
+            String closeTime,
+            String description) {
+            Store store = new Store();
+            store.userId = userId;
+            store.name = name;
+            store.address = address;
+            store.phone = phone;
+            store.category_id = categoryId;
+            store.thumbnail_url = thumbnailUrl;
+            store.open_time = openTime;
+            store.close_time = closeTime;
+            store.description = description;
+            store.status = StoreStatus.PREPARING;
+            store.avg_rating = 0;
+            store.review_count = 0;
+
+
+            return store;
+        }
+
 }

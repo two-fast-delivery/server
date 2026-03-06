@@ -1,12 +1,20 @@
 package nbcamp.TwoFastDelivery.domain.store.application;
 
 import java.util.UUID;
+
+import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
+import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
+
+
+
+
 public interface StoreService {
-/*     
+     
     UUID createStore(StoreCreateRequest request, CurrentUser user);
 
     StoreDetailResponse getStore(UUID storeId, CurrentUser user);
 
+    /* 
     void updateStore(UUID storeId, StoreUpdateRequest request, CurrentUser user);
 
     void requestDeleteStore(UUID storeId, CurrentUser user);
@@ -15,5 +23,5 @@ public interface StoreService {
 
     List<StoreSummaryResponse> getMystores(CurrentUser user);
 
-*/
+   */ 
 }
