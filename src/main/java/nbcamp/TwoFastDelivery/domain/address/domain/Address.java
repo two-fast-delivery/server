@@ -43,6 +43,10 @@ public class Address extends BaseEntity {
         this.detailAddress = detailAddress;
     }
 
+    public UUID getAddressId() {
+        return this.id != null ? this.id.getId() : null;
+    }
+
     private AddressId initializedId(UUID addressId) {
         if (addressId == null) {
             return AddressId.of();
