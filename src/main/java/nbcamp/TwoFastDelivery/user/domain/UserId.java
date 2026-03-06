@@ -2,6 +2,7 @@ package nbcamp.TwoFastDelivery.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,5 +19,8 @@ public class UserId implements Serializable {
 
     public UserId(UUID id) { this.id = id;}
 
-    public static UserId of(UUID id) { return new UserId(id);}
+
+    public static UserId of(UUID id) {return new UserId(id);}
+
+
 }
