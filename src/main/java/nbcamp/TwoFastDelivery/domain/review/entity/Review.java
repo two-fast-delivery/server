@@ -2,6 +2,7 @@ package nbcamp.TwoFastDelivery.domain.review.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -20,13 +21,25 @@ public class Review extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
-    private Long userId;
+    @Column(nullable = false)
+    private Long userId; // -> 수정 요망 Long
 
-    private Long storeId;
+    private Long storeId; // -> 수정 요망 Long
 
-    private Long orderId;
+    private Long orderId; // -> 수정 요망 Long
 
+    @Column(nullable = false)
     private Integer rating;
 
+    @Column(length = 200)
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReviewStatus status;
+
+    public void update(Integer rating, String content) {
+        this.rating = rating;
+        this.content = content;
+    }
 }

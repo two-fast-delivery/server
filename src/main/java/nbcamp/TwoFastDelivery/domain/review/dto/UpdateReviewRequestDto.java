@@ -9,10 +9,10 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class CreateReviewRequestDto {
+public class UpdateReviewRequestDto {
 
     @NotNull
-    private Long orderId; //-->수정 요망 UUID로 바꾸기
+    private UUID userId;
 
     @NotNull
     @Min(1)

@@ -2,7 +2,9 @@ package nbcamp.TwoFastDelivery.domain.review.controller;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.ReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewRequestDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewResponseDto;
 import nbcamp.TwoFastDelivery.domain.review.service.ReviewService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,18 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId, @RequestBody CreateReviewRequestDto requestDto) {
-        ReviewResponseDto data = reviewService.createReview(userId, requestDto);
+        CreateReviewResponseDto data = reviewService.createReview(userId, requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.success("리뷰 작성이 완료되었습니다",data));
     }
 
+    @PatchMapping("/{reviewId}")
+    public  ResponseEntity<?> updateReview(@RequestHeader("userId") Long userId, @PathVariable UUID reviewId, @RequestBody UpdateReviewRequestDto updateReviewRequest) {
+        UpdateReviewResponseDto data  = reviewService.updateReview(reviewId, updateReviewRequest);
+
+        return ResponseEntity.ok(
+                CommonResponse.success("리뷰 수정이 완료되었습니다",data)
+        );
+    }
 }

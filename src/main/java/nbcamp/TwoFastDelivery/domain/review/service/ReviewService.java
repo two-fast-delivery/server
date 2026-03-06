@@ -2,8 +2,11 @@ package nbcamp.TwoFastDelivery.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.ReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewRequestDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewResponseDto;
 import nbcamp.TwoFastDelivery.domain.review.entity.Review;
+import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.domain.review.repository.ReviewRepository;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
@@ -21,24 +24,25 @@ public class ReviewService {
 
 
     // 리뷰 생성
-    // userId 나중에 토큰에서 세팅
-    public ReviewResponseDto createReview(Long userId, CreateReviewRequestDto requestDto) {
+    // userId 나중에 토큰에서 세팅  userId Long -> UUID로 수정
+    public CreateReviewResponseDto createReview(Long userId, CreateReviewRequestDto requestDto) {
         if (reviewRepository.existsByOrderId(requestDto.getOrderId())) {
-            throw new CustomException(ErrorCode.REVIEW_ALREADY_EXISTS); //예외사항 규격 맞춰서 처리
+            throw new CustomException(ErrorCode.REVIEW_ALREADY_EXISTS);
         }
 
         Review review = Review.builder()
                 .userId(userId)
-                .storeId(null) // orederId에서 storeId 세팅
+                .storeId(null) //-> 수정 요망 orederId에서 storeId 세팅
                 .orderId(requestDto.getOrderId())
                 .rating(requestDto.getRating())
                 .content(requestDto.getContent())
+                .status(ReviewStatus.ACTIVE)
                 .build();
 
         Review savedReview = reviewRepository.save(review);
 
-        ReviewResponseDto responseDto = new ReviewResponseDto(
-                "가게 이름",//store 세팅
+        CreateReviewResponseDto responseDto = new CreateReviewResponseDto(
+                "가게 이름",//-> 수정요망 store 세팅
                 savedReview.getId(),
                 savedReview.getRating(),
                 savedReview.getContent(),
@@ -46,5 +50,24 @@ public class ReviewService {
         );
 
         return responseDto;
+    }
+
+    //리뷰 수정
+    public UpdateReviewResponseDto updateReview(UUID reviewId, UpdateReviewRequestDto updateReviewRequest) {
+         Review review = reviewRepository.findById(reviewId)
+                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_EXISTS));
+
+         //리뷰가 활성화 상태 아닐 때
+         if (review.getStatus()!= ReviewStatus.ACTIVE) {
+             throw new CustomException(ErrorCode.REVIEW_NOT_ACTIVE);
+         }
+
+         review.update(updateReviewRequest.getRating(), updateReviewRequest.getContent());
+
+          return new UpdateReviewResponseDto(
+                  reviewId,
+                  review.getRating(),
+                  review.getContent()
+          );
     }
 }
