@@ -6,6 +6,7 @@ import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity

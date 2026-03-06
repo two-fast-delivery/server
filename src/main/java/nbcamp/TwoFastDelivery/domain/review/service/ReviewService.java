@@ -1,10 +1,7 @@
 package nbcamp.TwoFastDelivery.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewResponseDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.*;
 import nbcamp.TwoFastDelivery.domain.review.entity.Review;
 import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.domain.review.repository.ReviewRepository;
@@ -69,5 +66,22 @@ public class ReviewService {
                   review.getRating(),
                   review.getContent()
           );
+    }
+
+    //리뷰 상세 조회
+    public DetailReviewResponseDto detailReview(UUID reviewId) {
+        //reviewId에 해당하는 리뷰가 존재하지 않을 때
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_EXISTS));
+
+        return new DetailReviewResponseDto(reviewId,
+                review.getStatus(),
+                review.getStoreId(),
+                review.getUserId(),
+                review.getRating(),
+                review.getContent(),
+                review.getCreatedAt(),
+                review.getUpdatedAt()
+        );
     }
 }

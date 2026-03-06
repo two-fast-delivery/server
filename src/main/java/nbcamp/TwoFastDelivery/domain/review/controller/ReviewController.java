@@ -1,11 +1,9 @@
 package nbcamp.TwoFastDelivery.domain.review.controller;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.CreateReviewResponseDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewRequestDto;
-import nbcamp.TwoFastDelivery.domain.review.dto.UpdateReviewResponseDto;
+import nbcamp.TwoFastDelivery.domain.review.dto.*;
 import nbcamp.TwoFastDelivery.domain.review.service.ReviewService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
 import org.springframework.http.HttpStatus;
@@ -35,6 +33,15 @@ public class ReviewController {
 
         return ResponseEntity.ok(
                 CommonResponse.success("리뷰 수정이 완료되었습니다",data)
+        );
+    }
+
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<?> detailReview(@PathVariable UUID reviewId,@Pa) {
+        DetailReviewResponseDto data = reviewService.detailReview(reviewId);
+
+        return ResponseEntity.ok(
+                CommonResponse.success("리뷰 상세 조회 성공",data)
         );
     }
 }
