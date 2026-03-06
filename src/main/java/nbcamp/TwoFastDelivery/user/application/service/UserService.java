@@ -22,6 +22,7 @@ public class UserService {
 
         // 2.user생성
         User user = User.create(
+                request.getUsername(),
                 request.getEmail(),
                 request.getNickname(),
                 request.getPassword()
