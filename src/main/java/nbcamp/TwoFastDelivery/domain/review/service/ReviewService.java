@@ -7,9 +7,14 @@ import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.domain.review.repository.ReviewRepository;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -84,6 +89,22 @@ public class ReviewService {
                 review.getUpdatedAt()
         );
     }
+
+    //리뷰 가게 기준 조회
+    public FindReviewByStoreResponsePageDto storeReview(Long storeId, int page, int size, String sort) {
+        //수정 -> storeId 검증 작업 필요
+        Pageable pageable = createPageable(page, size, sort);
+
+        Page<Review> reviewPage = reviewRepository.findReviewByStore(storeId, ReviewStatus.ACTIVE, pageable);
+
+        List<FindReviewByStoreResponseDto> reviews = reviewPage.getContent().stream()
+                .map(FindReviewByStoreResponseDto::from)
+                .toList();
+
+        return FindReviewByStoreResponsePageDto.of(reviewPage, reviews);
+    }
+
+
     //리뷰 삭제
     public void deleteReview(UUID reviewId, Long userId) {
         //reviewId에 해당하는 리뷰가 존재하지 않을 떄
@@ -95,5 +116,24 @@ public class ReviewService {
         }
 
         review.delete(ReviewStatus.DELETE);
+    }
+
+    //Pageable 평점순,오래된순, 최신순
+    private Pageable createPageable(int page, int size, String sort) {
+        int validatedSize = validateSize(size);
+
+        return switch (sort) {
+            case "ratingDesc" -> PageRequest.of(page, validatedSize, Sort.by(Sort.Direction.DESC, "rating"));
+            case "oldest" -> PageRequest.of(page, validatedSize, Sort.by(Sort.Direction.ASC, "createdAt"));
+            case "latest" -> PageRequest.of(page, validatedSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+            default -> PageRequest.of(page, validatedSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        };
+    }
+
+    private int validateSize(int size) {
+        if (size == 10 || size == 30 || size == 50) {
+            return size;
+        }
+        return 10;
     }
 }

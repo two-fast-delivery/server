@@ -19,6 +19,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    //리뷰 생성
     @PostMapping
     public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
         CreateReviewResponseDto data = reviewService.createReview(userId, requestDto);
@@ -27,6 +28,7 @@ public class ReviewController {
                 .body(CommonResponse.success("리뷰 작성이 완료되었습니다",data));
     }
 
+    //리뷰 수정
     @PatchMapping("/{reviewId}")
     public  ResponseEntity<?> updateReview(@RequestHeader("userId") Long userId, @PathVariable UUID reviewId, @RequestBody UpdateReviewRequestDto updateReviewRequest) {
         UpdateReviewResponseDto data  = reviewService.updateReview(reviewId, updateReviewRequest);
@@ -36,6 +38,7 @@ public class ReviewController {
         );
     }
 
+    //리뷰 상세 조회
     @GetMapping("/{reviewId}")
     public ResponseEntity<?> detailReview(@PathVariable UUID reviewId) {
         DetailReviewResponseDto data = reviewService.detailReview(reviewId);
@@ -45,6 +48,21 @@ public class ReviewController {
         );
     }
 
+    //리뷰 가게 기준 조회
+    @GetMapping("/{storeId}/reviews")
+    public ResponseEntity<?> getStoreReviews(
+            @PathVariable Long storeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "latest") String sort
+    ) {
+        FindReviewByStoreResponsePageDto data = reviewService.storeReview(storeId, page, size, sort);
+        return ResponseEntity.ok(
+                CommonResponse.success("리뷰 가게 기준 조회 성공", data)
+        );
+    }
+
+    //리뷰 삭제
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<?> deleteReview(@PathVariable UUID reviewId) {
 
