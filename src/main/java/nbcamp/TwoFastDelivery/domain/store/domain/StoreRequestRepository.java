@@ -9,4 +9,6 @@ public interface StoreRequestRepository extends JpaRepository<StoreRequest, UUID
 
     List<StoreRequest> findByStore_IdAndStatus(UUID storeId, StoreRequestStatus status);
     
+    boolean existsByStore_IdAndRequestTypeAndStatus(UUID storeId, StoreRequestType requestType, StoreRequestStatus status);
 }
+

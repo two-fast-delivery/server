@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nbcamp.TwoFastDelivery.user.domain.UserId;
-import nbcamp.TwoFastDelivery.user.domain.UserRole;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
+import nbcamp.TwoFastDelivery.user.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +23,7 @@ public class UserRoleChangeRequest {
     private UserId userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "current_role", nullable = false)
+    @Column(name = "before_role", nullable = false)
     private UserRole currentRole;
 
     @Enumerated(EnumType.STRING)

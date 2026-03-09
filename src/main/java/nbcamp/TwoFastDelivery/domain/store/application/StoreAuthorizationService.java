@@ -1,4 +1,4 @@
-/*  // USER DTO 보고 수정 
+// USER DTO 보고 수정 
 
 package nbcamp.TwoFastDelivery.domain.store.application;
 
@@ -10,8 +10,8 @@ import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 @Service
 public class StoreAuthorizationService {
 
-    public void validateOwnerOrManagerOrMaster(Store store, CurrentUser user) {
-        boolean isOwner = store.getUser_id().equals(user.id());
+    public static void validateOwnerOrManagerOrMaster(Store store, CurrentUser user) {
+        boolean isOwner = store.getUserId().equals(user.id());
         boolean isManager = user.hasRole("MANAGER");
         boolean isMaster = user.hasRole("MASTER");
 
@@ -22,4 +22,3 @@ public class StoreAuthorizationService {
 }
 
 
-*/

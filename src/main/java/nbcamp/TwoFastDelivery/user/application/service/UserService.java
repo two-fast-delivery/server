@@ -1,11 +1,15 @@
 package nbcamp.TwoFastDelivery.user.application.service;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.user.application.dto.CreateUserRequest;
-import nbcamp.TwoFastDelivery.user.application.dto.UserResponse;
-import nbcamp.TwoFastDelivery.user.domain.User;
+import nbcamp.TwoFastDelivery.user.application.dto.request.CreateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserStatusRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.response.UserResponse;
+import nbcamp.TwoFastDelivery.user.domain.user.User;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.infrastructure.UserJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,36 @@ public class UserService {
         userJpaRepository.save(user);
 
         //4.응답
+        return UserResponse.from(user);
+    }
+
+    public UserResponse getUser(UserId userId) {
+
+        User user = userJpaRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+
+        return UserResponse.from(user);
+    }
+
+    @Transactional
+    public UserResponse updateUser(UserId userId, UpdateUserRequest request){
+
+        User user = userJpaRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+
+        user.update(request.getNickname(), request.getPassword());
+
+        return UserResponse.from(user);
+    }
+
+    @Transactional
+    public UserResponse updateUserStatus(UserId userId, UpdateUserStatusRequest request){
+
+        User user = userJpaRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+
+        user.updateStatus(request.getStatus());
+
         return UserResponse.from(user);
     }
 }
