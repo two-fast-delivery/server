@@ -3,7 +3,10 @@ package nbcamp.TwoFastDelivery.domain.address.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
+import nbcamp.TwoFastDelivery.global.exception.CustomException;
+import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
@@ -27,7 +30,7 @@ public class Address extends BaseEntity {
     private String detailAddress;
 
     @Builder
-    public Address(UUID addressId, String alias, String address, String detailAddress) {
+    private Address(UUID addressId, String alias, String address, String detailAddress) {
         checkValidAddress(alias, address, detailAddress);
 
         this.id = initializedId(addressId);
@@ -56,12 +59,24 @@ public class Address extends BaseEntity {
     }
 
     private void checkValidAddress(String alias, String address, String detailAddress) {
-        Assert.hasText(alias, "배송지 별칭은 필수입니다.");
-        Assert.hasText(address, "기본 주소는 필수입니다.");
-        Assert.hasText(detailAddress, "상세 주소는 필수입니다.");
+        if (!StringUtils.hasText(alias)) {
+            throw new CustomException(ErrorCode.ADDRESS_ALIAS_REQUIRED);
+        }
+        if (!StringUtils.hasText(address)) {
+            throw new CustomException(ErrorCode.ADDRESS_VALUE_REQUIRED);
+        }
+        if (!StringUtils.hasText(detailAddress)) {
+            throw new CustomException(ErrorCode.DETAIL_ADDRESS_REQUIRED);
+        }
 
-        Assert.isTrue(alias.length() <= 50, "별칭은 50자 이내여야 합니다.");
-        Assert.isTrue(address.length() <= 255, "주소는 255자 이내여야 합니다.");
-        Assert.isTrue(detailAddress.length() <= 255, "상세 주소는 255자 이내여야 합니다.");
+        if (alias.length() > 50) {
+            throw new CustomException(ErrorCode.ADDRESS_ALIAS_TOO_LONG);
+        }
+        if (address.length() > 255) {
+            throw new CustomException(ErrorCode.ADDRESS_VALUE_TOO_LONG);
+        }
+        if (detailAddress.length() > 255) {
+            throw new CustomException(ErrorCode.DETAIL_ADDRESS_TOO_LONG);
+        }
     }
 }
