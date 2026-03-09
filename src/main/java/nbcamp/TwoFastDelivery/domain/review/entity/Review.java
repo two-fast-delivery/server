@@ -43,4 +43,8 @@ public class Review extends BaseEntity {
         this.rating = rating;
         this.content = content;
     }
+
+    public void delete(ReviewStatus status) {
+        this.status = status;
+    }
 }

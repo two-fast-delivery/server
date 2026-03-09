@@ -84,4 +84,16 @@ public class ReviewService {
                 review.getUpdatedAt()
         );
     }
+    //리뷰 삭제
+    public void deleteReview(UUID reviewId, Long userId) {
+        //reviewId에 해당하는 리뷰가 존재하지 않을 떄
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_EXISTS));
+        //reviewId-userId와 로그인 되어있는 userId가 일치하지 않을 때
+        if (review.getUserId()!=userId) {
+            throw new CustomException(ErrorCode.REVIEW_NOT_EQUAL_USER);
+        }
+
+        review.delete(ReviewStatus.DELETE);
+    }
 }

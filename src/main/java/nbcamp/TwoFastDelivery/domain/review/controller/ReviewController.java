@@ -37,11 +37,19 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<?> detailReview(@PathVariable UUID reviewId,@Pa) {
+    public ResponseEntity<?> detailReview(@PathVariable UUID reviewId) {
         DetailReviewResponseDto data = reviewService.detailReview(reviewId);
 
         return ResponseEntity.ok(
                 CommonResponse.success("리뷰 상세 조회 성공",data)
+        );
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable UUID reviewId) {
+
+        return ResponseEntity.ok(
+                CommonResponse.success("리뷰 삭제가 완료되었습니다.")
         );
     }
 }
