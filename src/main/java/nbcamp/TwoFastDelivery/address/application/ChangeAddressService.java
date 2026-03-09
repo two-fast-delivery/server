@@ -10,6 +10,8 @@ import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ChangeAddressService {
@@ -27,9 +29,14 @@ public class ChangeAddressService {
         );
     }
 
+    @Transactional
+    public void deleteAddress(UUID userId, UUID addressId) {
+        Address address = getAddress(AddressId.of(addressId));
+        address.delete(userId);
+    }
+
     private Address getAddress(AddressId addressId) {
-        Address address = addressRepository.findById(addressId)
+        return addressRepository.findById(addressId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ADDRESS_NOT_FOUND));
-        return address;
     }
 }
