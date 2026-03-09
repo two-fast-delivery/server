@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.user.domain;
+package nbcamp.TwoFastDelivery.user.domain.user;
 
 public enum UserStatus {
 

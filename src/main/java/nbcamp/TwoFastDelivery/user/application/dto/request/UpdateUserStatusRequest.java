@@ -1,8 +1,8 @@
-package nbcamp.TwoFastDelivery.user.application.dto;
+package nbcamp.TwoFastDelivery.user.application.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nbcamp.TwoFastDelivery.user.domain.UserStatus;
+import nbcamp.TwoFastDelivery.user.domain.user.UserStatus;
 
 @Getter
 @NoArgsConstructor

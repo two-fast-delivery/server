@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.user.application.dto;
+package nbcamp.TwoFastDelivery.user.application.dto.request;
 
 import lombok.Getter;
 

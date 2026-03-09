@@ -1,12 +1,12 @@
 package nbcamp.TwoFastDelivery.user.application.service;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.user.application.dto.CreateUserRequest;
-import nbcamp.TwoFastDelivery.user.application.dto.UpdateUserRequest;
-import nbcamp.TwoFastDelivery.user.application.dto.UpdateUserStatusRequest;
-import nbcamp.TwoFastDelivery.user.application.dto.UserResponse;
-import nbcamp.TwoFastDelivery.user.domain.User;
-import nbcamp.TwoFastDelivery.user.domain.UserId;
+import nbcamp.TwoFastDelivery.user.application.dto.request.CreateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserStatusRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.response.UserResponse;
+import nbcamp.TwoFastDelivery.user.domain.user.User;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.infrastructure.UserJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,9 +59,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse updateUserStatus(UserId uesrId, UpdateUserStatusRequest request){
+    public UserResponse updateUserStatus(UserId userId, UpdateUserStatusRequest request){
 
-        User user = userJpaRepository.findById(uesrId)
+        User user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
 
         user.updateStatus(request.getStatus());

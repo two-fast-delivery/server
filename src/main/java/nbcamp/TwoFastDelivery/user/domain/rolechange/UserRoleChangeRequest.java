@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nbcamp.TwoFastDelivery.user.domain.UserId;
-import nbcamp.TwoFastDelivery.user.domain.UserRole;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
+import nbcamp.TwoFastDelivery.user.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 

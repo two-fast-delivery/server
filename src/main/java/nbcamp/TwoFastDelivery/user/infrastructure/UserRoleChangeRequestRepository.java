@@ -1,6 +1,6 @@
 package nbcamp.TwoFastDelivery.user.infrastructure;
 
-import nbcamp.TwoFastDelivery.user.domain.UserId;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.RoleChangeRequestId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeRequest;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeStatus;

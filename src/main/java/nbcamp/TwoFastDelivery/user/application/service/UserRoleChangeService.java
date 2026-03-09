@@ -1,10 +1,10 @@
 package nbcamp.TwoFastDelivery.user.application.service;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.user.application.dto.RoleChangeRequestCreateRequest;
-import nbcamp.TwoFastDelivery.user.application.dto.RoleChangeRequestResponse;
-import nbcamp.TwoFastDelivery.user.domain.User;
-import nbcamp.TwoFastDelivery.user.domain.UserId;
+import nbcamp.TwoFastDelivery.user.application.dto.request.RoleChangeRequestCreateRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.response.RoleChangeRequestResponse;
+import nbcamp.TwoFastDelivery.user.domain.user.User;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.RoleChangeRequestId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeRequest;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeStatus;

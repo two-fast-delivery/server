@@ -1,10 +1,15 @@
 package nbcamp.TwoFastDelivery.user.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.user.application.dto.*;
+import nbcamp.TwoFastDelivery.user.application.dto.request.CreateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.RoleChangeRequestCreateRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.request.UpdateUserStatusRequest;
+import nbcamp.TwoFastDelivery.user.application.dto.response.RoleChangeRequestResponse;
+import nbcamp.TwoFastDelivery.user.application.dto.response.UserResponse;
 import nbcamp.TwoFastDelivery.user.application.service.UserRoleChangeService;
 import nbcamp.TwoFastDelivery.user.application.service.UserService;
-import nbcamp.TwoFastDelivery.user.domain.UserId;
+import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +46,7 @@ public class UserController {
         return userService.updateUserStatus(UserId.of(userId), request);
     }
 
-    @PostMapping("{userId}/role-change-requests")
+    @PostMapping("/{userId}/role-change-requests")
     public ResponseEntity<RoleChangeRequestResponse> createRoleChangeRequest(
             @PathVariable UUID userId,
             @RequestBody RoleChangeRequestCreateRequest request

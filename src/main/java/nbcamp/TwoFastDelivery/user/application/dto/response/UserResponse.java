@@ -1,8 +1,8 @@
-package nbcamp.TwoFastDelivery.user.application.dto;
+package nbcamp.TwoFastDelivery.user.application.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import nbcamp.TwoFastDelivery.user.domain.User;
+import nbcamp.TwoFastDelivery.user.domain.user.User;
 
 @Getter
 @Builder
