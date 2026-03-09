@@ -3,7 +3,7 @@ spring:
     name: TwoFastDelivery
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/twofast
+    url: jdbc:postgresql://localhost:5432/twofastdelivery
     username:
     password:
     driver-class-name: org.postgresql.Driver

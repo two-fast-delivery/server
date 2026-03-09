@@ -23,7 +23,7 @@ public class UserRoleChangeRequest {
     private UserId userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "current_role", nullable = false)
+    @Column(name = "before_role", nullable = false)
     private UserRole currentRole;
 
     @Enumerated(EnumType.STRING)

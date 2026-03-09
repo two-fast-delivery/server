@@ -60,6 +60,21 @@ public class User {
 
         return user;
     }
+
+    public void update(String nickname, String password){
+        this.nickname = nickname;
+        this.password = password;
+        this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    public void updateStatus(UserStatus status) {
+        this.status = status;
+        this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    public void changeRole(UserRole role) {
+        this.role = role;
+    }
 }
 
 
