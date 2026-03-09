@@ -162,10 +162,10 @@ public class ProductService {
      * @param deletedBy 삭제를 수행한 사용자의 식별자 (또는 이름)
      */
     @Transactional
-    public void deleteProduct(UUID productId, String deletedBy) {
+    public void deleteProduct(UUID productId, UUID deletedBy) {
         Product product = getProductEntity(productId);
         // Soft Delete
-        product.markAsDeleted(deletedBy);
+        product.delete(deletedBy);
 
         // 옵션 그룹 처리와 동일하게, 이 상품이 속한 카테고리(그룹)에 남은 다른 안 지워진 상품이 없으면 그룹도 삭제
         if (product.getProductGroupId() != null) {
@@ -174,7 +174,7 @@ public class ProductService {
 
             if (!hasOtherProducts) {
                 productGroupRepository.findByIdAndDeletedAtIsNull(product.getProductGroupId())
-                        .ifPresent(group -> group.markAsDeleted(deletedBy));
+                        .ifPresent(group -> group.delete(deletedBy));
             }
         }
     }

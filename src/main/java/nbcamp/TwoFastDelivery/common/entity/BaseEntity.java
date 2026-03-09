@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 // 이 어노테이션이 붙은 클래스는 실제 DB 테이블과 매핑되지 않고 자식 클래스에게 매핑 정보만 제공
@@ -25,19 +26,19 @@ public abstract class BaseEntity {
 
     @CreatedBy
     @Column(updatable = false)
-    private String createdBy;
+    private UUID createdBy;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private String updatedBy;
+    private UUID updatedBy;
 
     private LocalDateTime deletedAt;
 
-    private String deletedBy;
+    private UUID deletedBy;
 
-    public void markAsDeleted(String deletedBy) {
+    public void delete(UUID deletedBy) {
         this.deletedAt = LocalDateTime.now();
         this.deletedBy = deletedBy;
     }

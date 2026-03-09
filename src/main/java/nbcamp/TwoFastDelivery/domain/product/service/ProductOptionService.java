@@ -70,9 +70,9 @@ public class ProductOptionService {
     }
 
     @Transactional
-    public void deleteOption(UUID optionId, String deletedBy) {
+    public void deleteOption(UUID optionId, UUID deletedBy) {
         ProductOption option = getOptionEntity(optionId);
-        option.markAsDeleted(deletedBy);
+        option.delete(deletedBy);
 
         // 방금 삭제한 옵션을 제외하고, 부모 그룹에 다른 '유효한(삭제되지 않은)' 옵션이 남아있는지 확인
         boolean hasOtherOptions = optionRepository.existsByGroupIdAndDeletedAtIsNullAndIdNot(option.getGroupId(),
@@ -81,7 +81,7 @@ public class ProductOptionService {
         if (!hasOtherOptions) {
             // 다른 옵션이 없다면 부모 옵션 그룹도 함께 삭제
             ProductOptionGroup group = getOptionGroupEntity(option.getGroupId());
-            group.markAsDeleted(deletedBy);
+            group.delete(deletedBy);
         }
     }
 

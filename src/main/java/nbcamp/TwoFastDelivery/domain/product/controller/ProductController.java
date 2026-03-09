@@ -26,21 +26,21 @@ public class ProductController {
 
     @GetMapping("/stores/{storeId}/products")
     public CommonResponse<List<ProductResponse.Info>> getProductsByStore(@PathVariable UUID storeId) {
-        return CommonResponse.success(productQueryService.getProductsByStore(storeId));
+        return CommonResponse.success("상품 목록 조회 성공", productQueryService.getProductsByStore(storeId));
     }
 
     @GetMapping("/stores/{storeId}/products/{productId}")
     public CommonResponse<ProductResponse.Info> getProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId) {
-        return CommonResponse.success(productQueryService.getProduct(productId));
+        return CommonResponse.success("상품 상세 조회 성공", productQueryService.getProduct(productId));
     }
 
     // [OWNER]
     @GetMapping("/owner/stores/{storeId}/products")
     public CommonResponse<List<ProductResponse.Info>> getOwnerProductsByStore(
             @PathVariable UUID storeId) {
-        return CommonResponse.success(productQueryService.getProductsByStore(storeId));
+        return CommonResponse.success("상품 목록 조회 성공", productQueryService.getProductsByStore(storeId));
     }
 
     @PostMapping("/owner/stores/{storeId}/products")
@@ -48,7 +48,7 @@ public class ProductController {
     public CommonResponse<ProductResponse.Info> createProduct(
             @PathVariable UUID storeId,
             @RequestBody ProductRequest.Create request) {
-        return CommonResponse.success(productService.createProduct(storeId, request));
+        return CommonResponse.success("상품 생성 성공", productService.createProduct(storeId, request));
     }
 
     @PatchMapping("/owner/stores/{storeId}/products/{productId}")
@@ -56,16 +56,16 @@ public class ProductController {
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
             @RequestBody ProductRequest.Update request) {
-        return CommonResponse.success(productService.updateProduct(productId, request));
+        return CommonResponse.success("상품 수정 성공", productService.updateProduct(productId, request));
     }
 
     @DeleteMapping("/owner/stores/{storeId}/products/{productId}")
     public CommonResponse<Void> deleteProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
-            @RequestHeader(value = "X-User-Id", defaultValue = "owner-system") String deletedBy) {
+            @RequestHeader(value = "X-User-Id") UUID deletedBy) {
         productService.deleteProduct(productId, deletedBy);
-        return CommonResponse.success();
+        return CommonResponse.success("상품 삭제 성공");
     }
 
     @PostMapping("/owner/stores/{storeId}/gen-description")

@@ -23,7 +23,7 @@ public class ProductOptionController {
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
             @RequestBody ProductOptionRequest.CreateOption request) {
-        return CommonResponse.success(optionService.createOption(productId, request));
+        return CommonResponse.success("옵션 생성 성공", optionService.createOption(productId, request));
     }
 
     @PatchMapping("/owner/stores/{storeId}/products/{productId}/options/{optionId}")
@@ -32,7 +32,7 @@ public class ProductOptionController {
             @PathVariable UUID productId,
             @PathVariable UUID optionId,
             @RequestBody ProductOptionRequest.CreateOption request) {
-        return CommonResponse.success(optionService.updateOption(optionId, request));
+        return CommonResponse.success("옵션 수정 성공", optionService.updateOption(optionId, request));
     }
 
     @DeleteMapping("/owner/stores/{storeId}/products/{productId}/options/{optionId}")
@@ -40,8 +40,8 @@ public class ProductOptionController {
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
             @PathVariable UUID optionId,
-            @RequestHeader(value = "X-User-Id", defaultValue = "owner-system") String deletedBy) {
+            @RequestHeader(value = "X-User-Id") UUID deletedBy) {
         optionService.deleteOption(optionId, deletedBy);
-        return CommonResponse.success();
+        return CommonResponse.success("옵션 삭제 성공");
     }
 }
