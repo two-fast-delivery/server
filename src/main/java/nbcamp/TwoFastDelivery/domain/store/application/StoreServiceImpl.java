@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
 import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
+import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreUpdateRequest;
 import nbcamp.TwoFastDelivery.domain.store.domain.Category;
 import nbcamp.TwoFastDelivery.domain.store.domain.CategoryRepository;
 import nbcamp.TwoFastDelivery.domain.store.domain.Store;
@@ -89,5 +90,33 @@ public class StoreServiceImpl implements StoreService {
                                 .avgRating(store.getAvg_rating())
                                 .reviewCount(store.getReview_count())
                                 .build();
+    }
+
+
+    @Override
+    public void updateStore(UUID storeId, StoreUpdateRequest request, CurrentUser user) {
+      Store store = storeRepository.findByIdAndDeletedAtIsNull(storeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+      
+      StoreAuthorizationService.validateOwnerOrManagerOrMaster(store, user);
+
+      // 카테고리 확인
+      if(request.getCategoryId() != null) {
+        categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        store.changeCategory(request.getCategoryId());
+    }
+
+      // 값이 null 이면 기존 정보 유지
+      String name = request.getName() != null ? request.getName() : store.getName();
+      String address = request.getAddress() != null ? request.getAddress() : store.getAddress();
+      String phone = request.getPhone() != null ? request.getPhone() : store.getPhone();
+      String thumbnailUrl = request.getThumbnailUrl() != null ? request.getThumbnailUrl() : store.getThumbnail_url();
+      String openTime = request.getOpenTime() != null ? request.getOpenTime() : store.getOpen_time();
+      String closeTime = request.getCloseTime() != null ? request.getCloseTime() : store.getClose_time();
+      String description = request.getDescription() != null ? request.getDescription() : store.getDescription();
+
+
+      store.changeBasicInfo(name, address, phone, thumbnailUrl, openTime, closeTime, description);
+
+      storeRepository.save(store);
     }
 }
