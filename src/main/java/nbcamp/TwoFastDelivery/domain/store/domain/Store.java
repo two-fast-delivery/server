@@ -47,8 +47,8 @@ public class Store extends BaseEntity {
         @Column(name = "status", nullable = false)
         private StoreStatus status;
 
-        @Column(name = "avg_rating", columnDefinition = "tinyint default 0")
-        private Byte avg_rating;
+        @Column(name = "avg_rating", columnDefinition = "float default 0")
+        private float avg_rating;
 
         @Column(name = "review_count", columnDefinition = "int default 0")
         private Integer review_count;
@@ -105,4 +105,9 @@ public class Store extends BaseEntity {
             return store;
         }
 
+
+        // 카테고리 변경
+        public void changeCategory(UUID categoryId) {
+            this.category_id = categoryId;
+        }
 }

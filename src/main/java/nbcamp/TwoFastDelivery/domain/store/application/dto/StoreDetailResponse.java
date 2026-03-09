@@ -21,6 +21,6 @@ public class StoreDetailResponse {
     private final String closeTime;
     private final String description;
     private final String status;
-    private final Byte avgRating;
+    private final Float avgRating;
     private final Integer reviewCount;
 }
