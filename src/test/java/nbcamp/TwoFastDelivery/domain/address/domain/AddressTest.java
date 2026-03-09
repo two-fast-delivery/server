@@ -1,5 +1,7 @@
 package nbcamp.TwoFastDelivery.domain.address.domain;
 
+import nbcamp.TwoFastDelivery.global.exception.CustomException;
+import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,7 @@ class AddressTest {
             Address address = createAddress(alias, addressName, detailAddress);
 
             assertThat(address).isNotNull();
-            assertThat(address.getId()).isNotNull();
+            assertThat(address.getAddressId()).isNotNull();
             assertThat(address.getAlias()).isEqualTo(alias);
             assertThat(address.getAddress()).isEqualTo(addressName);
             assertThat(address.getDetailAddress()).isEqualTo(detailAddress);
@@ -50,7 +52,8 @@ class AddressTest {
         @DisplayName("실패: 생성 시 별칭이 비어있으면 예외 발생")
         void aliasMandatoryFail(String invalidValue) {
             assertThatThrownBy(() -> createAddress(invalidValue, "주소", "상세"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_REQUIRED);
         }
 
         @ParameterizedTest
@@ -59,7 +62,8 @@ class AddressTest {
         @DisplayName("실패: 생성 시 주소가 비어있으면 예외 발생")
         void addressMandatoryFail(String invalidValue) {
             assertThatThrownBy(() -> createAddress("별칭", invalidValue, "상세"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_REQUIRED);
         }
 
         @ParameterizedTest
@@ -68,7 +72,8 @@ class AddressTest {
         @DisplayName("실패: 생성 시 상세 주소가 비어있으면 예외 발생")
         void detailAddressMandatoryFail(String invalidValue) {
             assertThatThrownBy(() -> createAddress("별칭", "주소", invalidValue))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_REQUIRED);
         }
 
         @Test
@@ -76,8 +81,8 @@ class AddressTest {
         void aliasLengthFail() {
             String longAlias = "가".repeat(51);
             assertThatThrownBy(() -> createAddress(longAlias, "주소", "상세"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("별칭은 50자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_TOO_LONG);
         }
 
         @Test
@@ -85,8 +90,8 @@ class AddressTest {
         void addressLengthFail() {
             String longText = "가".repeat(256);
             assertThatThrownBy(() -> createAddress("별칭", longText, "상세"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("주소는 255자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_TOO_LONG);
         }
 
         @Test
@@ -94,8 +99,8 @@ class AddressTest {
         void detailAddressLengthFail() {
             String longText = "가".repeat(256);
             assertThatThrownBy(() -> createAddress("별칭", "주소", longText))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("주소는 255자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_TOO_LONG);
         }
     }
 
@@ -121,7 +126,8 @@ class AddressTest {
         void updateAliasMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
             assertThatThrownBy(() -> address.update(invalidValue, "주소", "상세"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_REQUIRED);
         }
 
         @ParameterizedTest
@@ -131,7 +137,8 @@ class AddressTest {
         void updateAddressMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
             assertThatThrownBy(() -> address.update("별칭", invalidValue, "상세"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_REQUIRED);
         }
 
         @ParameterizedTest
@@ -141,7 +148,8 @@ class AddressTest {
         void updateDetailAddressMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
             assertThatThrownBy(() -> address.update("별칭", "주소", invalidValue))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_REQUIRED);
         }
 
         @Test
@@ -150,8 +158,8 @@ class AddressTest {
             Address address = createDefaultAddress();
             String longAlias = "가".repeat(51);
             assertThatThrownBy(() -> address.update(longAlias, "주소", "상세"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("별칭은 50자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_TOO_LONG);
         }
 
         @Test
@@ -160,8 +168,8 @@ class AddressTest {
             Address address = createDefaultAddress();
             String longText = "가".repeat(256);
             assertThatThrownBy(() -> address.update("별칭", longText, "상세"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("주소는 255자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_TOO_LONG);
         }
 
         @Test
@@ -170,9 +178,8 @@ class AddressTest {
             Address address = createDefaultAddress();
             String longText = "가".repeat(256);
             assertThatThrownBy(() -> address.update("별칭", "주소", longText))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("상세 주소는 255자 이내여야 합니다.");
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_TOO_LONG);
         }
-
     }
 }
