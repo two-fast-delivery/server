@@ -12,4 +12,12 @@ public class AddressResponseDto {
     public static class CreateResult {
         private UUID addressId;
     }
+
+    @Getter @Builder @AllArgsConstructor
+    public static class Address {
+        private UUID addressId;
+        private String alias;
+        private String address;
+        private String detailAddress;
+    }
 }
