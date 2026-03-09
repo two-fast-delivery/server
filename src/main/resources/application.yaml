@@ -17,5 +17,11 @@ spring:
         format_sql: true
     show-sql: true
 
+  messages:
+    basename: messages
+    encoding: UTF-8
+    always-use-message-format: true
+
+
 server:
   port: 8080
