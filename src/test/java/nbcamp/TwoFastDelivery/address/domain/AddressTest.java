@@ -1,5 +1,6 @@
-package nbcamp.TwoFastDelivery.domain.address.domain;
+package nbcamp.TwoFastDelivery.address.domain;
 
+import nbcamp.TwoFastDelivery.address.domain.Address;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

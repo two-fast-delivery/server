@@ -1,10 +1,10 @@
-package nbcamp.TwoFastDelivery.domain.address.application;
+package nbcamp.TwoFastDelivery.address.application;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.address.application.dto.AddressServiceDto;
-import nbcamp.TwoFastDelivery.domain.address.domain.Address;
-import nbcamp.TwoFastDelivery.domain.address.domain.AddressId;
-import nbcamp.TwoFastDelivery.domain.address.domain.AddressRepository;
+import nbcamp.TwoFastDelivery.address.application.dto.AddressServiceDto;
+import nbcamp.TwoFastDelivery.address.domain.Address;
+import nbcamp.TwoFastDelivery.address.domain.AddressId;
+import nbcamp.TwoFastDelivery.address.domain.AddressRepository;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;

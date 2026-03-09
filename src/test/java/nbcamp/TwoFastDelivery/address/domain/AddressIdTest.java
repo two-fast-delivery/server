@@ -1,5 +1,6 @@
-package nbcamp.TwoFastDelivery.domain.address.domain;
+package nbcamp.TwoFastDelivery.address.domain;
 
+import nbcamp.TwoFastDelivery.address.domain.AddressId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;

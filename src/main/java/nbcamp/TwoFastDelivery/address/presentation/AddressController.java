@@ -1,9 +1,9 @@
-package nbcamp.TwoFastDelivery.domain.address.presentation;
+package nbcamp.TwoFastDelivery.address.presentation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.address.application.ChangeAddressService;
-import nbcamp.TwoFastDelivery.domain.address.application.CreateAddressService;
+import nbcamp.TwoFastDelivery.address.application.ChangeAddressService;
+import nbcamp.TwoFastDelivery.address.application.CreateAddressService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
