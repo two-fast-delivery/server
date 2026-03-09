@@ -29,4 +29,11 @@ public class AddressController {
         changeAddressService.changeAddress(request.toServiceDto(addressId));
     }
 
+    @DeleteMapping("/{addressId}")
+    public void deleteAddress(
+            @PathVariable UUID addressId) {
+        // TODO: userId 검증 후 삭제 로직
+        changeAddressService.deleteAddress(UUID.randomUUID(), addressId);
+    }
+
 }
