@@ -5,7 +5,6 @@ import lombok.*;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -39,7 +38,7 @@ public class Address extends BaseEntity {
         this.detailAddress = detailAddress;
     }
 
-    public void update(String alias, String address, String detailAddress) {
+    public void change(String alias, String address, String detailAddress) {
         checkValidAddress(alias, address, detailAddress);
         this.alias = alias;
         this.address = address;
@@ -79,4 +78,5 @@ public class Address extends BaseEntity {
             throw new CustomException(ErrorCode.DETAIL_ADDRESS_TOO_LONG);
         }
     }
+
 }

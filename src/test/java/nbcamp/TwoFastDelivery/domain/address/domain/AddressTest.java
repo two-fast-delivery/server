@@ -112,7 +112,7 @@ class AddressTest {
         @DisplayName("성공: 유효한 정보로 수정 시 필드 값 변경")
         void updateSuccess() {
             Address address = createDefaultAddress();
-            address.update("회사", "성남시 분당구", "202호");
+            address.change("회사", "성남시 분당구", "202호");
 
             assertThat(address.getAlias()).isEqualTo("회사");
             assertThat(address.getAddress()).isEqualTo("성남시 분당구");
@@ -125,7 +125,7 @@ class AddressTest {
         @DisplayName("실패: 수정 시 별칭이 비어있으면 예외 발생")
         void updateAliasMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
-            assertThatThrownBy(() -> address.update(invalidValue, "주소", "상세"))
+            assertThatThrownBy(() -> address.change(invalidValue, "주소", "상세"))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_REQUIRED);
         }
@@ -136,7 +136,7 @@ class AddressTest {
         @DisplayName("실패: 수정 시 주소가 비어있으면 예외 발생")
         void updateAddressMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
-            assertThatThrownBy(() -> address.update("별칭", invalidValue, "상세"))
+            assertThatThrownBy(() -> address.change("별칭", invalidValue, "상세"))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_REQUIRED);
         }
@@ -147,7 +147,7 @@ class AddressTest {
         @DisplayName("실패: 수정 시 상세 주소가 비어있으면 예외 발생")
         void updateDetailAddressMandatoryFail(String invalidValue) {
             Address address = createDefaultAddress();
-            assertThatThrownBy(() -> address.update("별칭", "주소", invalidValue))
+            assertThatThrownBy(() -> address.change("별칭", "주소", invalidValue))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_REQUIRED);
         }
@@ -157,7 +157,7 @@ class AddressTest {
         void updateAliasLengthFail() {
             Address address = createDefaultAddress();
             String longAlias = "가".repeat(51);
-            assertThatThrownBy(() -> address.update(longAlias, "주소", "상세"))
+            assertThatThrownBy(() -> address.change(longAlias, "주소", "상세"))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_ALIAS_TOO_LONG);
         }
@@ -167,7 +167,7 @@ class AddressTest {
         void updateAddressLengthFail() {
             Address address = createDefaultAddress();
             String longText = "가".repeat(256);
-            assertThatThrownBy(() -> address.update("별칭", longText, "상세"))
+            assertThatThrownBy(() -> address.change("별칭", longText, "상세"))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ADDRESS_VALUE_TOO_LONG);
         }
@@ -177,7 +177,7 @@ class AddressTest {
         void updateDetailAddressLengthFail() {
             Address address = createDefaultAddress();
             String longText = "가".repeat(256);
-            assertThatThrownBy(() -> address.update("별칭", "주소", longText))
+            assertThatThrownBy(() -> address.change("별칭", "주소", longText))
                     .isInstanceOf(CustomException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DETAIL_ADDRESS_TOO_LONG);
         }
