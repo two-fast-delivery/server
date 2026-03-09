@@ -1,8 +1,7 @@
-package nbcamp.TwoFastDelivery.user.domain;
+package nbcamp.TwoFastDelivery.user.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import lombok.*;
 
 import java.io.Serializable;
