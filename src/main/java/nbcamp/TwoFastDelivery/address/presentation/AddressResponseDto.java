@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.address.presentation;
+package nbcamp.TwoFastDelivery.address.presentation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

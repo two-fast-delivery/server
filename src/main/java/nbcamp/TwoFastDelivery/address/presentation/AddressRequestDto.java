@@ -1,10 +1,10 @@
-package nbcamp.TwoFastDelivery.domain.address.presentation;
+package nbcamp.TwoFastDelivery.address.presentation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import nbcamp.TwoFastDelivery.domain.address.application.dto.AddressServiceDto;
+import nbcamp.TwoFastDelivery.address.application.dto.AddressServiceDto;
 
 import java.util.UUID;
 

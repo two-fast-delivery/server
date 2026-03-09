@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.address.application.dto;
+package nbcamp.TwoFastDelivery.address.application.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

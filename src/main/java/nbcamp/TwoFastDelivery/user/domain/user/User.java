@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.user.domain;
+package nbcamp.TwoFastDelivery.user.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -59,6 +59,21 @@ public class User {
         user.updatedAt = LocalDateTime.now();
 
         return user;
+    }
+
+    public void update(String nickname, String password){
+        this.nickname = nickname;
+        this.password = password;
+        this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    public void updateStatus(UserStatus status) {
+        this.status = status;
+        this.updatedAt = java.time.LocalDateTime.now();
+    }
+
+    public void changeRole(UserRole role) {
+        this.role = role;
     }
 }
 
