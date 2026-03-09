@@ -1,6 +1,9 @@
 package nbcamp.TwoFastDelivery.global.exception;
 
+import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
 
     /**
      * 서비스, 도메인에서 직접 던지는 예외
@@ -20,9 +26,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CommonResponse<Void>> handleCustomException(CustomException e) {
         ErrorCode ec = e.getErrorCode();
+
+        String resolvedMessage = messageSource.getMessage(ec.getMessage(), null, ec.getMessage(), LocaleContextHolder.getLocale());
+
         return ResponseEntity
                 .status(ec.getStatus())
-                .body(CommonResponse.fail(ec.getMessage(), ec.name()));
+                .body(CommonResponse.fail(resolvedMessage, ec.name()));
     }
 
     /**
