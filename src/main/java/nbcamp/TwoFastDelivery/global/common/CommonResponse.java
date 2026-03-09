@@ -26,16 +26,8 @@ public class CommonResponse<T> {
         return new CommonResponse<>(true, message, null, data);
     }
 
-    public static <T> CommonResponse<T> success(T data) {
-        return new CommonResponse<>(true, "요청 성공", null, data);
-    }
-
     public static CommonResponse<Void> success(String message) {
         return new CommonResponse<>(true, message, null, null);
-    }
-
-    public static CommonResponse<Void> success() {
-        return new CommonResponse<>(true, "요청 성공", null, null);
     }
 
     public static <T> CommonResponse<T> fail(String message, String errorCode, T data) {

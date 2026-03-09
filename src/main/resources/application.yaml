@@ -5,16 +5,27 @@ spring:
       max-request-size: 10MB
   application:
     name: TwoFastDelivery
+
   datasource:
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/twofastdelivery
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  messages:
+    basename: messages
+    encoding: UTF-8
+    always-use-message-format: true
+
+server:
+  port: 8080
+
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
