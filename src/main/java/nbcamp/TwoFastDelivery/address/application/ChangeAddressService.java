@@ -1,14 +1,16 @@
-package nbcamp.TwoFastDelivery.domain.address.application;
+package nbcamp.TwoFastDelivery.address.application;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.address.application.dto.AddressServiceDto;
-import nbcamp.TwoFastDelivery.domain.address.domain.Address;
-import nbcamp.TwoFastDelivery.domain.address.domain.AddressId;
-import nbcamp.TwoFastDelivery.domain.address.domain.AddressRepository;
+import nbcamp.TwoFastDelivery.address.application.dto.AddressServiceDto;
+import nbcamp.TwoFastDelivery.address.domain.Address;
+import nbcamp.TwoFastDelivery.address.domain.AddressId;
+import nbcamp.TwoFastDelivery.address.domain.AddressRepository;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +29,14 @@ public class ChangeAddressService {
         );
     }
 
+    @Transactional
+    public void deleteAddress(UUID userId, UUID addressId) {
+        Address address = getAddress(AddressId.of(addressId));
+        address.delete(userId);
+    }
+
     private Address getAddress(AddressId addressId) {
-        Address address = addressRepository.findById(addressId)
+        return addressRepository.findById(addressId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ADDRESS_NOT_FOUND));
-        return address;
     }
 }

@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.address.domain;
+package nbcamp.TwoFastDelivery.address.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
