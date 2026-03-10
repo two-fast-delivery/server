@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Optional;
 
+import java.util.UUID;
+
 /**
  * JPA Auditing 활성화 설정
  * - @CreatedDate, @LastModifiedDate 자동 주입
@@ -21,7 +23,7 @@ public class JpaConfig {
      * JWT 붙이면 "현재 로그인 유저 ID"를 꺼내서 return
      */
     @Bean
-    public AuditorAware<Long> auditorAware() {
+    public AuditorAware<UUID> auditorAware() {
         return () -> Optional.empty();
     }
 }
