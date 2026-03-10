@@ -24,7 +24,12 @@ public enum ErrorCode {
     DETAIL_ADDRESS_TOO_LONG(HttpStatus.BAD_REQUEST, "address.detail.too_long"),
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "address.not_found"),
 
-    ;
+    // 상품
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
+    PRODUCT_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 그룹을 찾을 수 없습니다."),
+    PRODUCT_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 옵션을 찾을 수 없습니다."),
+    PRODUCT_OPTION_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 옵션 그룹을 찾을 수 없습니다."),
+    INVALID_PRODUCT_DATA(HttpStatus.BAD_REQUEST, "상품 데이터가 올바르지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
