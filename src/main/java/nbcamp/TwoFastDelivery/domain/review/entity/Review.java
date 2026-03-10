@@ -42,7 +42,7 @@ public class Review extends BaseEntity {
         this.content = content;
     }
 
-    public void delete(ReviewStatus status) {
+    public void setReviewStatus(ReviewStatus status) {
         this.status = status;
     }
 }
