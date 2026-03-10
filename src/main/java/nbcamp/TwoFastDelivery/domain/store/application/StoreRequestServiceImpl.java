@@ -55,12 +55,12 @@ public class StoreRequestServiceImpl implements StoreRequestService {
             throw new CustomException(ErrorCode.CONFLICT);
         }
 
-        // 요청 처리리
-        if(storeRequest.getRequestType()==StoreRequestType.REGISTRATION){
+        // 요청 처리
+        if (storeRequest.getRequestType() == StoreRequestType.REGISTRATION) {
             handleRegistrationDecision(storeRequest, request.getApproved());
-        }else if(storeRequest.getRequestType()==StoreRequestType.DELETE){
-            handleDeleteDecision(storeRequest, request.getApproved());
-        }else{
+        } else if (storeRequest.getRequestType() == StoreRequestType.DELETE) {
+            handleDeleteDecision(storeRequest, request.getApproved(), admin); // admin 추가
+        } else {
             throw new CustomException(ErrorCode.INTERNAL_ERROR);
         }
     }
@@ -79,11 +79,11 @@ public class StoreRequestServiceImpl implements StoreRequestService {
         storeRequestRepository.save(storeRequest);
     }
 
-    private void handleDeleteDecision(StoreRequest storeRequest, boolean approved){
+    private void handleDeleteDecision(StoreRequest storeRequest, boolean approved, CurrentUser admin){
         Store store = storeRequest.getStore();
 
         if(approved){
-            store.softDelete();
+            store.delete(admin.id());
             storeRequest.approve();
         }else{
             storeRequest.reject(); 
