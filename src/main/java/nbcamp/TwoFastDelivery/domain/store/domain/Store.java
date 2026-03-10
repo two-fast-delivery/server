@@ -1,5 +1,6 @@
 package nbcamp.TwoFastDelivery.domain.store.domain;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -109,5 +110,11 @@ public class Store extends BaseEntity {
         // 카테고리 변경
         public void changeCategory(UUID categoryId) {
             this.category_id = categoryId;
+        }
+
+        //평점 재계산
+        public void updateRating(float avgRating, int reviewCount) {
+            this.avg_rating = avgRating;
+            this.review_count = reviewCount;
         }
 }

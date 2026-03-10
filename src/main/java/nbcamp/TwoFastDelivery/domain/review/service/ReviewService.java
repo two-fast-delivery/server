@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.review.dto.*;
 import nbcamp.TwoFastDelivery.domain.review.entity.Review;
 import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
+import nbcamp.TwoFastDelivery.domain.review.event.ReviewCreatedEvent;
+import nbcamp.TwoFastDelivery.domain.review.event.ReviewDeletedEvent;
+import nbcamp.TwoFastDelivery.domain.review.event.ReviewUpdatedEvent;
 import nbcamp.TwoFastDelivery.domain.review.repository.ReviewRepository;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +27,7 @@ import java.util.UUID;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-
+    private final ApplicationEventPublisher eventPublisher;
 
     // 리뷰 생성
     // userId 나중에 토큰에서 세팅  userId Long -> UUID로 수정
@@ -43,6 +47,11 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
 
+        //이벤트 발행
+        eventPublisher.publishEvent(
+                new ReviewCreatedEvent(review.getId(), review.getStoreId())
+        );
+
         CreateReviewResponseDto responseDto = new CreateReviewResponseDto(
                 "가게 이름",//-> 수정요망 store 세팅
                 savedReview.getId(),
@@ -50,7 +59,6 @@ public class ReviewService {
                 savedReview.getContent(),
                 savedReview.getCreatedAt()
         );
-
         return responseDto;
     }
 
@@ -65,6 +73,11 @@ public class ReviewService {
          }
 
          review.update(updateReviewRequest.getRating(), updateReviewRequest.getContent());
+
+         //이벤트 발행
+        eventPublisher.publishEvent(
+                new ReviewUpdatedEvent(reviewId, review.getStoreId())
+        );
 
           return new UpdateReviewResponseDto(
                   reviewId,
@@ -126,8 +139,12 @@ public class ReviewService {
         if (review.getUserId()!=userId) {
             throw new CustomException(ErrorCode.REVIEW_NOT_EQUAL_USER);
         }
-
         review.setReviewStatus(ReviewStatus.DELETE);
+
+        //이벤트 발행
+        eventPublisher.publishEvent(
+                new ReviewDeletedEvent(reviewId, review.getStoreId())
+        );
     }
 
     //Pageable 평점순,오래된순, 최신순
