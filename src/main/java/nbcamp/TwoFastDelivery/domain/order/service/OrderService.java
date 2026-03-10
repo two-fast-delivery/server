@@ -100,4 +100,13 @@ public class OrderService {
 
         order.updateStatus(newStatus);
     }
+
+    //주문시 지역검증
+    /*
+    public void validateDeliveryArea(String storeAddress, String DeliveryAddress){
+        if (!storeAddress.contains("종로구") || !deliveryAddress.contains("종로구")) {
+            throw new IllegalArgumentException("배송 가능 지역(광화문 인근)이 아닙니다.");
+        }
+    }
+     */
 }

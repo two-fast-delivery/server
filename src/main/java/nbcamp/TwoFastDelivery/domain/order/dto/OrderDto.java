@@ -2,7 +2,6 @@ package nbcamp.TwoFastDelivery.domain.order.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.address.domain.Address;
 import nbcamp.TwoFastDelivery.domain.order.entity.Order;
 
 import java.time.LocalDateTime;
