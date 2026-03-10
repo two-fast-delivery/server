@@ -1,6 +1,7 @@
 package nbcamp.TwoFastDelivery.global.exception;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -28,7 +30,7 @@ public class GlobalExceptionHandler {
         ErrorCode ec = e.getErrorCode();
 
         String resolvedMessage = messageSource.getMessage(ec.getMessage(), null, ec.getMessage(), LocaleContextHolder.getLocale());
-
+        log.error(e.getLocalizedMessage(), e);
         return ResponseEntity
                 .status(ec.getStatus())
                 .body(CommonResponse.fail(resolvedMessage, ec.name()));
@@ -44,6 +46,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         // message는 사람이 읽기 쉬운 형태
+        log.error(e.getLocalizedMessage(), e);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.fail(details.isBlank() ? ErrorCode.INVALID_INPUT.getMessage() : details,
@@ -55,6 +58,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotReadable(HttpMessageNotReadableException e) {
+        log.error(e.getLocalizedMessage(), e);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.fail(ErrorCode.JSON_PARSE_ERROR.getMessage(),

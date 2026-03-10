@@ -2,6 +2,7 @@ package nbcamp.TwoFastDelivery.global.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 
 @Getter
 public enum ErrorCode {
@@ -24,7 +25,11 @@ public enum ErrorCode {
     DETAIL_ADDRESS_TOO_LONG(HttpStatus.BAD_REQUEST, "address.detail.too_long"),
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "address.not_found"),
 
-    ;
+
+
+    // 인증
+    AUTHENTICATION_ACCOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다.");
+
 
     private final HttpStatus status;
     private final String message;
