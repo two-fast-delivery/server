@@ -13,7 +13,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -42,10 +41,6 @@ public abstract class BaseEntity {
     public void delete(UUID userId) {
         this.deletedAt = LocalDateTime.now();
         this.deletedBy = userId;
-    }
-
-    public void softDelete(){
-        this.deletedAt = LocalDateTime.now();
     }
 
 }
