@@ -6,7 +6,6 @@ import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,12 +21,11 @@ public class Review extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
-    @Column(nullable = false)
     private Long userId; // -> 수정 요망 Long
 
     private Long storeId; // -> 수정 요망 Long
 
-    private Long orderId; // -> 수정 요망 Long
+    private Long orderId; // -> 수정 요망 Long, nullable = false 3개 다 처리
 
     @Column(nullable = false)
     private Integer rating;

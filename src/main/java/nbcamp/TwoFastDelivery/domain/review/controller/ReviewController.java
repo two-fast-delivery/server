@@ -24,8 +24,8 @@ public class ReviewController {
     public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
         CreateReviewResponseDto data = reviewService.createReview(userId, requestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CommonResponse.success("리뷰 작성이 완료되었습니다",data));
+        return ResponseEntity.ok(
+                CommonResponse.success("리뷰 작성이 완료되었습니다",data));
     }
 
     //리뷰 수정
