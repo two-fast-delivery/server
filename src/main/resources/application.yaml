@@ -5,7 +5,10 @@ spring:
       max-request-size: 10MB
   application:
     name: TwoFastDelivery
+
   datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/twofastdelivery
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   driver-class-name: org.postgresql.Driver
@@ -29,6 +32,8 @@ server:
   port: 8080
 # server:
   # port: 8080
+    format_sql: true
+    show-sql: true
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
