@@ -1,12 +1,10 @@
 package nbcamp.TwoFastDelivery.domain.review.controller;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.review.dto.*;
 import nbcamp.TwoFastDelivery.domain.review.service.ReviewService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,18 +18,19 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //리뷰 생성
-    @PostMapping
-    public ResponseEntity<?> createReview(@RequestHeader("userId") Long userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
-        CreateReviewResponseDto data = reviewService.createReview(userId, requestDto);
+    @PostMapping("/{userId}")
+    public ResponseEntity<?> createReview(@RequestHeader("userId") UUID userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
+        CreateReviewResponseDto data = reviewService.createReview(userId, requestDto); //todo: PathVariable -> (requestHeader에서 token으로 UUID형태 userId받기)
 
         return ResponseEntity.ok(
                 CommonResponse.success("리뷰 작성이 완료되었습니다",data));
     }
 
     //리뷰 수정
+    //todo:유저 아이디 토큰에서 꺼내기
     @PatchMapping("/{reviewId}")
-    public  ResponseEntity<?> updateReview(@RequestHeader("userId") Long userId, @PathVariable UUID reviewId, @RequestBody UpdateReviewRequestDto updateReviewRequest) {
-        UpdateReviewResponseDto data  = reviewService.updateReview(reviewId, updateReviewRequest);
+    public  ResponseEntity<?> updateReview(@RequestHeader("userId") UUID userId, @PathVariable UUID reviewId, @RequestBody UpdateReviewRequestDto updateReviewRequest) {
+        UpdateReviewResponseDto data  = reviewService.updateReview(reviewId,userId, updateReviewRequest);
 
         return ResponseEntity.ok(
                 CommonResponse.success("리뷰 수정이 완료되었습니다",data)
@@ -51,7 +50,7 @@ public class ReviewController {
     //리뷰 가게 기준 조회
     @GetMapping("/stores/{storeId}")
     public ResponseEntity<?> getStoreReviews(
-            @PathVariable Long storeId,
+            @PathVariable UUID storeId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "latest") String sort
@@ -65,7 +64,7 @@ public class ReviewController {
     //리뷰 유저 기준 조회
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getMyReviews (
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "latest") String sort

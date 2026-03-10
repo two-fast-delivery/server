@@ -13,8 +13,8 @@ import java.util.UUID;
 public class DetailReviewResponseDto {
     private UUID reviewId;
     private ReviewStatus Status;
-    private Long storeId;
-    private Long userId;
+    private UUID storeId;
+    private UUID userId;
     private Integer rating;
     private String content;
     private LocalDateTime createdAt;

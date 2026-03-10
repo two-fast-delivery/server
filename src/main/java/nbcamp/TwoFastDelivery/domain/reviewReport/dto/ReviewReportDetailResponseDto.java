@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ReviewReportDetailResponseDto {
     private UUID reportId;
-    private Long reportUserId;
+    private UUID reportUserId;
     private ReviewReportStatus status;
     private UUID reviewId;
     private Integer rating;

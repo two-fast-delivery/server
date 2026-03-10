@@ -24,19 +24,16 @@ public class ReviewEventListener {
     private final StoreRepository storeRepository;
 
     @TransactionalEventListener
-    @Transactional
     public void handleReviewCreate(ReviewCreatedEvent event) {
         updateStoreRating(event.getStoreId());
     }
 
     @TransactionalEventListener
-    @Transactional
     public void handleReviewUpdated(ReviewUpdatedEvent event) {
         updateStoreRating(event.getStoreId());
     }
 
     @TransactionalEventListener
-    @Transactional
     public void handleReviewDeleted(ReviewDeletedEvent event) {
         updateStoreRating(event.getStoreId());
     }

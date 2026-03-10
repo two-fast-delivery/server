@@ -12,9 +12,6 @@ import java.util.UUID;
 public class UpdateReviewRequestDto {
 
     @NotNull
-    private UUID userId;
-
-    @NotNull
     @Min(1)
     @Max(5)
     private Integer rating;

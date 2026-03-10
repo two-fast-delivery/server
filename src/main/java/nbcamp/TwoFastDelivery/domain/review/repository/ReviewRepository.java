@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
-    boolean existsByOrderId(Long orderId);
+    boolean existsByOrderId(UUID orderId);
 
-    Page<Review> findReviewByStoreId(Long storeId, ReviewStatus status, Pageable pageable);
-    Page<Review> findReviewByUserId (Long userId, Pageable pageable);
+    Page<Review> findReviewByStoreId(UUID storeId, ReviewStatus status, Pageable pageable);
+    Page<Review> findReviewByUserId (UUID userId, Pageable pageable);
 
     //평점 계산
     @Query("""
