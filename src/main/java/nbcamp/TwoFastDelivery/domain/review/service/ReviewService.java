@@ -127,7 +127,7 @@ public class ReviewService {
             throw new CustomException(ErrorCode.REVIEW_NOT_EQUAL_USER);
         }
 
-        review.delete(ReviewStatus.DELETE);
+        review.setReviewStatus(ReviewStatus.DELETE);
     }
 
     //Pageable 평점순,오래된순, 최신순
@@ -148,4 +148,6 @@ public class ReviewService {
         }
         return 10;
     }
+
+
 }

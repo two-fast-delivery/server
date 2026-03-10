@@ -2,7 +2,7 @@ package nbcamp.TwoFastDelivery.domain.reviewReport.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
+import nbcamp.TwoFastDelivery.domain.review.entity.Review;
 import nbcamp.TwoFastDelivery.domain.reviewReport.enums.ReviewReportStatus;
 import nbcamp.TwoFastDelivery.global.common.BaseEntity;
 import org.hibernate.annotations.UuidGenerator;
@@ -22,14 +22,19 @@ public class ReviewReport extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID reviewId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @Column(nullable = false)
-    private String Content;
+    private String content;
 
     @Builder.Default
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReviewReportStatus status = ReviewReportStatus.PENDING;
+
+    public void setStatusReport(ReviewReportStatus status) {
+        this.status = status;
+    }
 }

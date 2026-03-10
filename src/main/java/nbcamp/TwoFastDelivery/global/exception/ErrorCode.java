@@ -23,6 +23,9 @@ public enum ErrorCode {
     REVIEW_NOT_ACTIVE(HttpStatus.NOT_FOUND, "리뷰가 활성화되어 있지 않습니다."),
     REVIEW_NOT_EQUAL_USER(HttpStatus.FORBIDDEN, "리뷰 작성자만이 삭제가 가능합니다."),
 
+    //리뷰 신고
+    REPORT_NOT_EXISTS(HttpStatus.NOT_FOUND, "신고 ID에 해당하는 리뷰가 존재하지 않습니다."),
+
     // 배송지
     ADDRESS_ALIAS_REQUIRED(HttpStatus.BAD_REQUEST, "address.alias.required"),
     ADDRESS_ALIAS_TOO_LONG(HttpStatus.BAD_REQUEST, "address.alias.too_long"),
