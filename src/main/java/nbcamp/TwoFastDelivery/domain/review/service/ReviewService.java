@@ -95,13 +95,25 @@ public class ReviewService {
         //수정 -> storeId 검증 작업 필요
         Pageable pageable = createPageable(page, size, sort);
 
-        Page<Review> reviewPage = reviewRepository.findReviewByStore(storeId, ReviewStatus.ACTIVE, pageable);
+        Page<Review> reviewPage = reviewRepository.findReviewByStoreId(storeId, ReviewStatus.ACTIVE, pageable);
 
         List<FindReviewByStoreResponseDto> reviews = reviewPage.getContent().stream()
                 .map(FindReviewByStoreResponseDto::from)
                 .toList();
 
         return FindReviewByStoreResponsePageDto.of(reviewPage, reviews);
+    }
+
+    //리뷰 본인 내역 조회
+    public FindMyReviewResponsePageDto myReview(Long userId,int page, int size, String sort) {
+        Pageable pageable = createPageable(page, size, sort);
+        Page<Review> reviewPage = reviewRepository.findReviewByUserId(userId, pageable);
+
+        List<FindReviewByStoreResponseDto> reviews = reviewPage.getContent().stream()
+                .map(FindReviewByStoreResponseDto::from)
+                .toList();
+
+        return FindMyReviewResponsePageDto.of(reviewPage, reviews);
     }
 
 

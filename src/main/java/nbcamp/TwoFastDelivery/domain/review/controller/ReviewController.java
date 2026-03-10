@@ -49,7 +49,7 @@ public class ReviewController {
     }
 
     //리뷰 가게 기준 조회
-    @GetMapping("/{storeId}/reviews")
+    @GetMapping("/stores/{storeId}")
     public ResponseEntity<?> getStoreReviews(
             @PathVariable Long storeId,
             @RequestParam(defaultValue = "0") int page,
@@ -60,6 +60,20 @@ public class ReviewController {
         return ResponseEntity.ok(
                 CommonResponse.success("리뷰 가게 기준 조회 성공", data)
         );
+    }
+
+    //리뷰 유저 기준 조회
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> getMyReviews (
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "latest") String sort
+    ){
+      FindMyReviewResponsePageDto data = reviewService.myReview(userId, page, size, sort);
+      return ResponseEntity.ok(
+              CommonResponse.success("내 리뷰 내역 조회 성공", data)
+      );
     }
 
     //리뷰 삭제
