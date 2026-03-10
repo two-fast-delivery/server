@@ -126,13 +126,25 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Page<StoreSummaryResponse> getStores(StoreSearchCondition condition, Pageable pageable, CurrentUser user){
+      
       if(user.id()==null){
         throw new CustomException(ErrorCode.UNAUTHORIZED);
       }
 
-      Page<Store> page = storeRepository.findByStatusAndDeletedAtIsNull(StoreStatus.OPEN, pageable);
+      String keyword = condition.getKeyword();
+      if(keyword != null){
+        keyword = keyword.trim();
+        if(keyword.isEmpty()){
+          keyword = null;
+        }
+      }
 
-      return page.map(store -> StoreSummaryResponse
+      Page<Store> page = storeRepository.searchStores(StoreStatus.OPEN, condition.getCategoryId(), keyword, pageable);
+      //Page<Store> page = storeRepository.findByStatusAndDeletedAtIsNull(StoreStatus.OPEN, pageable);
+
+      return page.map(this::toSummaryResponse);
+
+      /*return page.map(store -> StoreSummaryResponse
         .builder()
         .id(store.getId())
         .name(store.getName())
@@ -141,9 +153,26 @@ public class StoreServiceImpl implements StoreService {
         .categoryName("")// TODO: 추가필요
         .avgRating(store.getAvg_rating())
         .reviewCount(store.getReview_count())
-        .build());
+        .build());*/
     
     }
+      private StoreSummaryResponse toSummaryResponse(Store store){
+        String categoryName = categoryRepository.findById(store.getCategory_id())
+                                                .map(Category::getName)
+                                                .orElse("");
+
+        return StoreSummaryResponse
+        .builder()
+        .id(store.getId())
+        .name(store.getName())
+        .address(store.getAddress())
+        .thumbnailUrl(store.getThumbnail_url())
+        .categoryName("")// TODO: 추가필요
+        .avgRating(store.getAvg_rating())
+        .reviewCount(store.getReview_count())
+        .build();
+      }
+
 
     @Override
     public List<StoreSummaryResponse> getMyStores(CurrentUser user){

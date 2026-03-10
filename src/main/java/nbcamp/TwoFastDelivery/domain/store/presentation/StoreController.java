@@ -63,19 +63,39 @@ public class StoreController {
     
     }
     
+    @GetMapping
     public ResponseEntity<CommonResponse<Page<StoreSummaryResponse>>> getStores(
         @RequestParam(required = false)UUID categoryId,
         @RequestParam(required = false)String keyword,
         @RequestParam(defaultValue = "0")int page,
         @RequestParam(defaultValue = "0")int size,
         @RequestParam(defaultValue = "createdAt,desc")String sort,
-        @RequestParam(value = "User-Id", required = false)UUID userId
+        @RequestParam(value = "User-Id", required = false)UUID userId,
+        @RequestHeader("Authorization") String authHeader
     ){
         CurrentUser user = new CurrentUser(userId, Set.of("CUSTOMER"));
+        //CurrentUser user = CurrentUserResolver.from(authHeader);
+
+        if(size != 10&& size != 30 && size != 50){
+            size = 10;
+        }
+
+
         StoreSearchCondition condition = new StoreSearchCondition();
-        // TODO: 정렬 조건 설정 필요
+        condition.setCategoryId(categoryId);
+        condition.setKeyword(keyword);
+        condition.setSort(sort);
         
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Sort sortOption = Sort.by("createdAt").descending();
+        if("rating".equalsIgnoreCase(sort)){
+            sortOption = Sort.by("avg_rating").descending();
+        }else if("reviewCount".equalsIgnoreCase(sort)){
+            sortOption = Sort.by("review_count").descending();
+        }
+
+
+        Pageable pageable = PageRequest.of(page, size, sortOption);
 
         Page<StoreSummaryResponse> result = storeService.getStores(condition, pageable, user);
 

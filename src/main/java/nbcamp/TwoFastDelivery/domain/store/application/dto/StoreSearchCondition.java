@@ -2,6 +2,13 @@ package nbcamp.TwoFastDelivery.domain.store.application.dto;
 
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class StoreSearchCondition {
     
     private UUID categoryId;
