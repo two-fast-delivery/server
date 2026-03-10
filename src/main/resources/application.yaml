@@ -1,7 +1,10 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   application:
     name: TwoFastDelivery
-
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/twofastdelivery
@@ -25,3 +28,16 @@ spring:
 
 server:
   port: 8080
+# server:
+  # port: 8080
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: nbcamp.TwoFastDelivery.domain.product.dto
+  configuration:
+    map-underscore-to-camel-case: true
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+    url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent"
