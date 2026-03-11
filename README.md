@@ -66,6 +66,7 @@
 * AWS S3 : 이미지 저장
 * Toss Payments : 결제 처리
 * Google Gemini API : 상품 설명 생성
+  
 &nbsp;
 
 
@@ -172,7 +173,6 @@ domain
 
 # 💡 Troubleshooting
 
----
 
 ## 1️⃣ JWT Refresh Token 관리
 
