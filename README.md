@@ -1,92 +1,313 @@
-프로젝트 기간
-2026.02.24 ~ 2026.03.12
+# Two Fast Delivery
 
-팀원 역할 분담
+### 배달 주문 관리 백엔드 플랫폼
 
-곽찬홍	회원(User) / 인증(Auth) / 관리자 회원 관리	회원가입, 로그인, 로그아웃, 이메일 인증, 회원 정보 수정, 회원 탈퇴, 회원 리스트 조회, 회원 상세 조회, 회원 권한 변경, 권한 변경 요청 및 승인/거절
-양지호	가게(Store)	가게 리스트 조회, 가게 상세 조회, 가게 등록 요청, 가게 수정, 가게 삭제 요청, 가게 등록 승인/거절
-김강현	상품(Product)	상품 조회, 상품 등록, 상품 수정, 상품 삭제, 상품 옵션 등록/수정/삭제, 상품 설명 AI 생성
-김혜린	주문(Order) / 장바구니	주문 생성 및 결제, 주문 취소, 주문 조회, 주문 리스트 조회, 주문 상태 변경, 장바구니 조회/삭제/닫기
-이영재	리뷰(Review)	리뷰 생성, 리뷰 조회, 리뷰 수정, 리뷰 삭제, 리뷰 신고, 리뷰 신고 조회, 리뷰 신고 승인/거절
-박상은	배송지(Address) / 공통	배송지 생성, 배송지 조회, 배송지 리스트 조회, 배송지 수정, 배송지 삭제, 로그 생성
+광화문 지역 음식점의 주문을 온라인으로 관리하고
+주문 상태를 체계적으로 운영할 수 있도록 설계된 **배달 주문 관리 플랫폼 백엔드 프로젝트**
 
-서비스 구성 및 실행 방법
+&nbsp;
 
-프로젝트 목적
+# 📌 Project Overview
 
-1. DDD 기반 백엔드 구조 설계 경험
+| 항목    | 내용                                     |
+| ----- | -------------------------------------- |
+| 프로젝트명 | Two Fast Delivery                      |
+| 개발 기간 | 2026.02.24 ~ 2026.03.12                |
+| 개발 인원 | 6명                                     |
+| 목표    | DDD 기반 구조 설계 및 실제 서비스 수준의 주문 관리 시스템 구현 |
 
-본 프로젝트는 Domain Driven Design(DDD) 구조를 적용하여
-도메인 중심의 백엔드 아키텍처를 설계하고 구현하는 것을 목표로 합니다.
-도메인별로 계층을 분리하여
-Presentation
-Application
-Domain
-Infrastructure
-구조를 적용함으로써 비즈니스 로직과 기술 구현을 분리하고
-확장 가능한 구조를 만드는 경험을 목표로 합니다.
+&nbsp;
 
-2. MSA 확장을 고려한 서비스 설계
 
-서비스를 도메인 단위로 분리하여 설계함으로써
-향후 MSA(Microservice Architecture) 환경으로 전환할 수 있는 구조를 학습합니다.
-각 도메인은 독립적으로 관리될 수 있도록 설계하여
-User
-Store
-Product
-Order
-Review
-Address
-등의 도메인을 서비스 단위로 확장 가능하게 설계했습니다.
+# 🧭 Service Flow
 
-3. 실제 서비스 수준의 API 설계 경험
+```
+로그인
+   ↓
+상품 조회
+   ↓
+장바구니 담기
+   ↓
+주문 생성
+   ↓
+결제 요청
+   ↓
+결제 승인
+   ↓
+주문 상태 관리
+   ↓
+리뷰 작성
+```
+&nbsp;
 
-배달 플랫폼을 기반으로
-회원 관리
-가게 관리
-상품 관리
-주문 및 결제
-리뷰 관리
-등 실제 서비스에서 사용되는 기능을 RESTful API 형태로 설계하고 구현하여
-실제 서비스 구조에 가까운 백엔드 시스템을 경험하는 것을 목표로 합니다.
 
-기술 스택
-**Backend**
-Java 21
-Spring Boot 3.x
-Spring Security
-Spring Data JPA
-Hibernate
-**Database**
-PostgreSQL
-Flyway
-**Authentication**
-JWT (Access Token / Refresh Token)
-**Payment**
-Toss Payments API
-**AI / External API**
-Gemini AI API
-Toss Payments API
-**Storage / Infra**
-AWS S3
-**Dev Tools**
-Git
-GitHub
-Postman
-Notion
-Slack
-**Documentation**
-Swagger / OpenAPI
+# 🏗 System Architecture
 
-📌 설계 특징
-도메인 중심 설계: global.common 구조를 통한 공통 관심사 분리 및 확장성 확보
-보안/인증 최적화: Spring Security + JWT 기반의 독립적인 인증 레이어 구현
-DB 버전 관리: DBeaver 기반의 DB 운영
-컨테이너 기반 협업: Docker를 활용해 로컬 개발 환경의 파편화 방지 및 환경 동일성 유지
+<img width="1244" height="1024" alt="Image" src="https://github.com/user-attachments/assets/7d1b251b-6632-4408-a1f6-a65230a34d5a" />
 
-📄 API 문서
-http://localhost:8080/swagger-ui/index.html](http://43.200.251.132:8080/swagger-ui/index.html)
+외부 서비스 연동
 
-🗄️ ERD
+* PostgreSQL : 데이터 저장
+* AWS S3 : 이미지 저장
+* Toss Payments : 결제 처리
+* Google Gemini API : 상품 설명 생성
+&nbsp;
+
+
+# 🛠 Tech Stack
+
+### Backend
+
+* Java 21
+* Spring Boot 3.x
+* Spring Security
+* Spring Data JPA
+* Hibernate
+
+### Database
+
+* PostgreSQL
+* Flyway
+
+### Authentication
+
+* JWT (Access / Refresh Token)
+
+### External API
+
+* Toss Payments API
+* Gemini AI API
+
+### Infra
+
+* AWS S3
+
+### Collaboration
+
+* Git
+* GitHub
+* Notion
+* Slack
+
+### Documentation
+
+* Swagger
+
+  &nbsp;
+
+
+
+# 🎯 Core Features
+
+| 기능       | 설명                 |
+| -------- | ------------------ |
+| 회원 인증    | JWT 기반 인증 및 권한 관리  |
+| 가게 관리    | 가게 등록 요청 / 수정 / 삭제 |
+| 상품 관리    | 상품 CRUD / 옵션 관리    |
+| 장바구니     | 상품 담기 / 조회 / 삭제    |
+| 주문 관리    | 주문 생성 / 조회 / 취소    |
+| 결제 시스템   | 결제 요청 / 승인 / 취소    |
+| 주문 상태 관리 | 주문 상태 흐름 관리        |
+| 리뷰 시스템   | 리뷰 작성 / 수정 / 삭제    |
+| AI 기능    | Gemini 기반 상품 설명 생성 |
+
+&nbsp;
+
+
+
+# 🏗 Architecture Design
+
+본 프로젝트는 **DDD 기반 구조 + 4계층 아키텍처**를 적용했습니다.
+
+### 4 Layer Architecture
+
+```
+Presentation Layer
+Controller / API
+
+Application Layer
+Service / UseCase
+
+Domain Layer
+Entity / Domain Logic
+
+Infrastructure Layer
+Repository / External API
+```
+
+### Domain Structure
+
+```
+domain
+ ├ user
+ ├ store
+ ├ product
+ ├ order
+ ├ review
+ ├ address
+```
+
+### 설계 목표
+
+* 도메인 중심 설계
+* 비즈니스 로직과 기술 구현 분리
+* MSA 확장 가능 구조
+
+&nbsp;
+
+# 💡 Troubleshooting
+
+---
+
+## 1️⃣ JWT Refresh Token 관리
+
+### 문제
+
+Access Token 만료 시 재로그인 필요
+
+### 해결
+
+```
+Access Token
+Refresh Token
+```
+
+구조 도입
+
+### 결과
+
+보안 + 사용자 편의성 확보
+
+---
+
+## 2️⃣ 주문 금액 위변조 방지
+
+### 문제
+
+클라이언트 요청값을 그대로 사용할 경우
+주문 금액을 조작할 수 있는 문제가 발생합니다.
+
+### 해결
+
+주문 생성 시
+
+```
+클라이언트 요청 금액 무시
+↓
+DB 상품 가격 조회
+↓
+서버에서 주문 금액 재계산
+```
+
+### 결과
+
+결제 금액 위변조 방지
+
+---
+
+## 3️⃣ 주문 시점 가격 스냅샷 저장
+
+### 문제
+
+상품 가격 변경 시
+과거 주문 금액이 변하는 문제가 발생합니다.
+
+### 해결
+
+주문 생성 시
+
+```
+OrderItem.price
+```
+
+에 **주문 시점 가격 저장**
+
+### 결과
+
+과거 주문 데이터 금액 불변성 유지
+
+---
+
+## 4️⃣ 주문 상태 머신 설계
+
+### 문제
+
+잘못된 주문 상태 변경 가능
+
+### 해결
+
+주문 상태 흐름 제한
+
+```
+주문 요청
+→ 조리 중
+→ 조리 완료
+→ 배달 중
+→ 배달 완료
+```
+
+### 결과
+
+주문 상태 관리 안정성 확보
+
+&nbsp;
+
+
+# 👥 Team Members
+
+| 이름  | 담당 도메인                 | 주요 기능                             |
+| --- | ---------------------- | --------------------------------- |
+| 곽찬홍 | User / Auth            | 회원가입, 로그인, 권한 관리                  |
+| 양지호 | Store                  | 가게 등록 요청 / 수정 / 삭제                |
+| 김강현 | Product                | 상품 CRUD / 옵션 / AI 설명              |
+| 김혜린 | Order / Cart / Payment | 주문 생성 / 조회 / 취소 / 결제 요청 / 승인 / 취소 |
+| 이영재 | Review                 | 리뷰 작성 / 신고                        |
+| 박상은 | Address                | 배송지 CRUD                          |
+
+&nbsp;
+
+# 📄 API Documentation
+
+Swagger
+
+```
+http://43.200.251.132:8080/swagger-ui/index.html
+```
+
+&nbsp;
+
+# ⚙️ Run Project
+
+### 환경 변수
+
+```
+DB_URL=jdbc:postgresql://localhost:5432/twofastdelivery
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+
+JWT_SECRET=your-secret-key
+
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_S3_BUCKET=
+```
+
+### 실행
+
+```
+./gradlew bootRun
+```
+
+&nbsp;
+
+# 🗄 ERD
+
 <img width="1244" height="2528" alt="sparta_2" src="https://github.com/user-attachments/assets/c0d8860c-93b6-4931-9ae0-234d69f455f7" />
 
+&nbsp;
+
+# 📈 What I Learned
+
+* DDD 기반 구조 설계를 통해 도메인 중심 설계 경험
+* 권한 관리 / 가게 / 상품 / 주문 / 결제 / 리뷰 도메인 간 협력 구조 설계
+* 서버 검증 기반의 방어적 설계 경험
