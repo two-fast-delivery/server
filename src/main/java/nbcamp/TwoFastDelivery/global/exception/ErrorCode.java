@@ -3,6 +3,7 @@ package nbcamp.TwoFastDelivery.global.exception;
 import lombok.Getter;
 import nbcamp.TwoFastDelivery.domain.review.entity.Review;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 
 @Getter
 public enum ErrorCode {
@@ -35,6 +36,11 @@ public enum ErrorCode {
     DETAIL_ADDRESS_TOO_LONG(HttpStatus.BAD_REQUEST, "address.detail.too_long"),
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "address.not_found"),
 
+
+
+    // 인증
+    AUTHENTICATION_ACCOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다."),
+
     // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
     PRODUCT_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 그룹을 찾을 수 없습니다."),
@@ -44,7 +50,6 @@ public enum ErrorCode {
 
     private final HttpStatus status;
     private final String message;
-
 
     ErrorCode(HttpStatus status, String message) {
         this.status = status;

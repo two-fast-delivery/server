@@ -8,8 +8,8 @@ import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.RoleChangeRequestId;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeRequest;
 import nbcamp.TwoFastDelivery.user.domain.rolechange.UserRoleChangeStatus;
-import nbcamp.TwoFastDelivery.user.infrastructure.UserJpaRepository;
-import nbcamp.TwoFastDelivery.user.infrastructure.UserRoleChangeRequestRepository;
+import nbcamp.TwoFastDelivery.user.domain.user.UserRepository;
+import nbcamp.TwoFastDelivery.user.domain.user.UserRoleChangeRequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Transactional
 public class UserRoleChangeService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userJpaRepository;
     private final UserRoleChangeRequestRepository roleChangeRequestRepository;
 
     public RoleChangeRequestResponse createRoleChangeRequest(UUID userId, RoleChangeRequestCreateRequest request) {

@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import nbcamp.TwoFastDelivery.user.domain.user.User;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 public class UserResponse {
