@@ -34,13 +34,13 @@ public class PaymentService {
             throw new IllegalArgumentException("결제 금액이 일치하지 않습니다.");
         }
 
-        // 3. 결제 내역 저장
+        // 3. 결제 성공 내역 DB 저장
         Payment payment = Payment.builder()
                 .paymentKey(requestDto.getPaymentKey())
                 .orderId(order.getId())
                 .userId(order.getUserId())
                 .amount(requestDto.getTotalAmount())
-                .method("SUCCESS")
+                .method("SUCCESS") // 성공 내역
                 .paymentStatus(PaymentStatus.DONE)
                 .build();
 
@@ -55,11 +55,12 @@ public class PaymentService {
         Order order = orderRepository.findById(payment.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
 
-        // 4. 취소 시 본인 확인 (결제 테이블의 userId 혹은 주문 테이블의 userId 활용)
+        // 4. 취소 시 본인 확인
         if (!payment.getUserId().equals(userId) && !role.equals("MASTER")) {
             throw new IllegalAccessError("본인의 결제 건만 취소할 수 있습니다.");
         }
 
+        // 5. 상태 확인 및 취소
         if (payment.getPaymentStatus().equals(PaymentStatus.READY) ||
                 payment.getPaymentStatus().equals(PaymentStatus.DONE)) {
             payment.updatePaymentStatus(PaymentStatus.CANCELED);
@@ -67,6 +68,7 @@ public class PaymentService {
             throw new IllegalArgumentException("취소 가능한 상태가 아닙니다.");
         }
 
+        // 주문 상태도 함께 취소 처리
         order.cancel();
     }
 }

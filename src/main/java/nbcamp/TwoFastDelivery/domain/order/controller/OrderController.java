@@ -69,29 +69,37 @@ public class OrderController {
 
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<String> cancelOrder(
-            @AuthenticationPrincipal UserDetails userDetails, // 3. 누가 취소하는지 확인
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable UUID orderId) {
+        try {
+            User user = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-        // 4. 서비스에서 "본인 주문인지" 확인하도록 userId 전달
-        orderService.cancelOrder(orderId, user.getUserId().getId(), user.getRole().name());
-        return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
+            orderService.cancelOrder(orderId, user.getUserId().getId(), user.getRole().name());
+            return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
+        } catch (IllegalStateException e) { //5분이 지났을 때
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalAccessError e) { // 권한 예외 추가
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<String> updateStatus(
-            @AuthenticationPrincipal UserDetails userDetails, // 5. 상태 변경 권한 확인
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable UUID orderId,
             @RequestParam OrderStatus status,
             @RequestAttribute UUID storeId) {
+        try {
+            User user = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-
-        // 6. 상태 변경 권한(가게 점주인지 등) 확인 로직 필요
-        orderService.updateOrderStatus(orderId, storeId, status, user.getRole().name());
-        return ResponseEntity.ok("주문 상태가 " + status.getDescription() + "으로 변경되었습니다.");
+            orderService.updateOrderStatus(orderId, storeId, status, user.getRole().name());
+            return ResponseEntity.ok("주문 상태가 " + status.getDescription() + "으로 변경되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalAccessError e) { // 권한 예외 추가
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 }
