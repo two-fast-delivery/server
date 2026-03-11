@@ -2,13 +2,15 @@ package nbcamp.TwoFastDelivery.domain.store.domain;
 
 import java.util.UUID;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 
 
 
 
-/* 임시
+
 @Entity
+@Getter
 @Table(name = "p_category")
 public class Category {
     @Id
@@ -18,4 +20,3 @@ public class Category {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(50)")
     private String name;
 }
-*/
