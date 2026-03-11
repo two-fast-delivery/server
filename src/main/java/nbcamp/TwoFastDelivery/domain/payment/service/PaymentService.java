@@ -10,6 +10,8 @@ import nbcamp.TwoFastDelivery.domain.payment.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -17,45 +19,54 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
 
-    //결제 요청 및 승인
-    public void confirmPayment(PaymentConfirmDto requestDto) {
-        // 1. 주문 데이터 확인
+    // 결제 요청 및 승인
+    public void confirmPayment(PaymentConfirmDto requestDto, UUID userId, String role) {
         Order order = orderRepository.findById(requestDto.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 없습니다."));
+
+        // 1. 소유자 및 권한 검증
+        if (!order.getUserId().equals(userId) && !role.equals("MASTER")) {
+            throw new IllegalAccessError("본인의 주문만 결제할 수 있습니다.");
+        }
 
         // 2. 금액 검증
         if (!order.getAmount().getValue().equals(requestDto.getTotalAmount())) {
             throw new IllegalArgumentException("결제 금액이 일치하지 않습니다.");
         }
 
-        // 3. 결제 성공 내역 DB 저장
+        // 3. 결제 내역 저장
         Payment payment = Payment.builder()
                 .paymentKey(requestDto.getPaymentKey())
                 .orderId(order.getId())
                 .userId(order.getUserId())
                 .amount(requestDto.getTotalAmount())
-                .method("SUCCESS") // 테스트용 값
+                .method("SUCCESS")
                 .paymentStatus(PaymentStatus.DONE)
                 .build();
 
         paymentRepository.save(payment);
     }
 
-    //결제 취소
-    public void cancelPayment(String paymentKey) {
+    // 결제 취소
+    public void cancelPayment(String paymentKey, UUID userId, String role) {
         Payment payment = paymentRepository.findByPaymentKey(paymentKey)
-                .orElseThrow(() -> new IllegalArgumentException("결제 취소 가능한 결제 내역이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("결제 내역이 없습니다."));
 
         Order order = orderRepository.findById(payment.getOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("해결할 결제건이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
 
-        if (payment.getPaymentStatus().equals(PaymentStatus.READY)||payment.getPaymentStatus().equals(PaymentStatus.DONE)) {
-            payment.updatePaymentStatus(PaymentStatus.CANCELED);
-        }else{
-            throw new IllegalArgumentException("결제 취소 가능한 결제 내역이 없습니다.");
+        // 4. 취소 시 본인 확인 (결제 테이블의 userId 혹은 주문 테이블의 userId 활용)
+        if (!payment.getUserId().equals(userId) && !role.equals("MASTER")) {
+            throw new IllegalAccessError("본인의 결제 건만 취소할 수 있습니다.");
         }
 
-        paymentRepository.save(payment);
+        if (payment.getPaymentStatus().equals(PaymentStatus.READY) ||
+                payment.getPaymentStatus().equals(PaymentStatus.DONE)) {
+            payment.updatePaymentStatus(PaymentStatus.CANCELED);
+        } else {
+            throw new IllegalArgumentException("취소 가능한 상태가 아닙니다.");
+        }
+
         order.cancel();
     }
 }
