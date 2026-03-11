@@ -100,4 +100,17 @@ public class OrderService {
 
         order.updateStatus(newStatus);
     }
+
+    public PageResponse<OrderDto> getOrders(UUID targetId, String role, Pageable pageable) {
+        Page<Order> orderPage;
+
+        switch (role) {
+            case "MASTER", "MANAGER" -> orderPage = orderRepository.findAll(pageable);
+            case "OWNER" -> orderPage = orderRepository.findAllByStoreId(targetId, pageable);
+            case "CUSTOMER" -> orderPage = orderRepository.findAllByUserId(targetId, pageable);
+            default -> throw new IllegalArgumentException("유효하지 않은 권한입니다.");
+        }
+
+        return PageResponse.from(orderPage, OrderDto::from);
+    }
 }

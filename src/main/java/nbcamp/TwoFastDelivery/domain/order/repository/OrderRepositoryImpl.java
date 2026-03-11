@@ -15,6 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
+    //private final JPAQueryFactory queryFactory;
     private final EntityManager em;
 
     @Override
