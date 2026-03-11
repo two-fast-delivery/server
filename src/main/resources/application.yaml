@@ -34,7 +34,7 @@ mybatis:
 
 gemini:
   api:
-    key: ${GOOGLE_API_KEY}
+    key: ${GEMINI_API_KEY}
     url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent"
 
 # 로그 설정

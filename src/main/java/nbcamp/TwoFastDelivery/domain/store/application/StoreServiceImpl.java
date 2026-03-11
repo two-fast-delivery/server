@@ -1,12 +1,16 @@
 package nbcamp.TwoFastDelivery.domain.store.application;
 
+import java.util.List;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
 import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
+import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSearchCondition;
+import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSummaryResponse;
 import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreUpdateRequest;
 import nbcamp.TwoFastDelivery.domain.store.domain.Category;
 import nbcamp.TwoFastDelivery.domain.store.domain.CategoryRepository;
@@ -119,4 +123,79 @@ public class StoreServiceImpl implements StoreService {
 
       storeRepository.save(store);
     }
-}
+
+    @Override
+    public Page<StoreSummaryResponse> getStores(StoreSearchCondition condition, Pageable pageable, CurrentUser user){
+      
+      if(user.id()==null){
+        throw new CustomException(ErrorCode.UNAUTHORIZED);
+      }
+
+      String keyword = condition.getKeyword();
+      if(keyword != null){
+        keyword = keyword.trim();
+        if(keyword.isEmpty()){
+          keyword = null;
+        }
+      }
+
+      Page<Store> page = storeRepository.searchStores(StoreStatus.OPEN, condition.getCategoryId(), keyword, pageable);
+      //Page<Store> page = storeRepository.findByStatusAndDeletedAtIsNull(StoreStatus.OPEN, pageable);
+
+      return page.map(this::toSummaryResponse);
+
+      /*return page.map(store -> StoreSummaryResponse
+        .builder()
+        .id(store.getId())
+        .name(store.getName())
+        .address(store.getAddress())
+        .thumbnailUrl(store.getThumbnail_url())
+        .categoryName("")// TODO: 추가필요
+        .avgRating(store.getAvg_rating())
+        .reviewCount(store.getReview_count())
+        .build());*/
+    
+    }
+      private StoreSummaryResponse toSummaryResponse(Store store){
+        String categoryName = categoryRepository.findById(store.getCategory_id())
+                                                .map(Category::getName)
+                                                .orElse("");
+
+        return StoreSummaryResponse
+        .builder()
+        .id(store.getId())
+        .name(store.getName())
+        .address(store.getAddress())
+        .thumbnailUrl(store.getThumbnail_url())
+        .categoryName("")// TODO: 추가필요
+        .avgRating(store.getAvg_rating())
+        .reviewCount(store.getReview_count())
+        .build();
+      }
+
+
+    @Override
+    public List<StoreSummaryResponse> getMyStores(CurrentUser user){
+      if(user.id()==null){
+        throw new CustomException(ErrorCode.UNAUTHORIZED);
+      }
+
+      List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(user.id());
+
+      return stores.stream().map(store -> StoreSummaryResponse
+        .builder()
+        .id(store.getId())
+        .name(store.getName())
+        .address(store.getAddress())
+        .thumbnailUrl(store.getThumbnail_url())
+        .categoryName("") // TODO: 추가필요
+        .avgRating(store.getAvg_rating())
+        .reviewCount(store.getReview_count())
+        .build()).toList();
+
+
+    }
+
+
+  }
+
