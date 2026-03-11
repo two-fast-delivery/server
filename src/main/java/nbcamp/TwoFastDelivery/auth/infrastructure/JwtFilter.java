@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.auth.application.TokenService;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import nbcamp.TwoFastDelivery.store.application.CurrentUser;
 import nbcamp.TwoFastDelivery.user.domain.user.User;
 import nbcamp.TwoFastDelivery.user.domain.user.UserId;
 import nbcamp.TwoFastDelivery.user.domain.user.UserRepository;
@@ -18,13 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -33,16 +34,12 @@ public class JwtFilter extends GenericFilterBean {
     private final TokenService tokenService;
     private final UserRepository userRepository;
 
-    /**
-     *
-     * 요청 헤더
-     *      Authorization: Basic 아이디 비밀번호 인증
-     *      Authorization: Bearer 토큰(JWT)
-     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
         String token = getToken((HttpServletRequest) request);
+
         try {
             if (StringUtils.hasText(token)) {
                 UUID userId = tokenService.getUserId(token);
@@ -50,23 +47,28 @@ public class JwtFilter extends GenericFilterBean {
                     throw new CustomException(ErrorCode.UNAUTHORIZED);
                 }
 
-                // 회원정보 추출 -> 스프링 시큐리티에 로그인 처리
-                User user = userRepository.findById(UserId.of(userId)).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+                User user = userRepository.findById(UserId.of(userId))
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-                UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                        .username(user.getUsername())
-                        .password("")
-                        .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))
-                        .build();
+                CurrentUser currentUser = new CurrentUser(
+                        userId,
+                        Set.of(user.getRole().name())
+                );
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        currentUser,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+                );
 
-                SecurityContextHolder.getContext().setAuthentication(authentication); // 로그인 처리
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (CustomException e) {
             HttpServletResponse res = (HttpServletResponse) response;
             res.sendError(e.getErrorCode().getStatus().value(), e.getMessage());
+            return;
         }
+
         chain.doFilter(request, response);
     }
 
@@ -75,7 +77,6 @@ public class JwtFilter extends GenericFilterBean {
         if (StringUtils.hasText(bearerToken) && bearerToken.toUpperCase().startsWith("BEARER ")) {
             return bearerToken.substring(7).trim();
         }
-
         return null;
     }
 }

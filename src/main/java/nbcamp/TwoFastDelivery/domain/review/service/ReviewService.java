@@ -33,7 +33,6 @@ public class ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     // 리뷰 생성
-    //TODO:인증 기능 작동 시 토큰에서 userId 발급, error 추가
     public CreateReviewResponseDto createReview(UUID userId, CreateReviewRequestDto requestDto) {
         Order order = orderRepository.findById(requestDto.getOrderId())
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
@@ -110,7 +109,6 @@ public class ReviewService {
 
     //리뷰 가게 기준 조회
     public FindReviewByStoreResponsePageDto storeReview(UUID storeId, int page, int size, String sort) {
-        //Todo: storeId 검증 작업? 필요할까?
         Pageable pageable = createPageable(page, size, sort);
 
         Page<Review> reviewPage = reviewRepository.findReviewByStoreIdAndStatus(storeId, ReviewStatus.ACTIVE, pageable);

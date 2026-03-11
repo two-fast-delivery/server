@@ -50,16 +50,25 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/", "/v3/api-docs/**", "/api-docs/**", "/api-docs.html", "/swagger-ui/**").permitAll()
+
+                        // 공개 조회
+                        .requestMatchers("/reviews/stores/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/reviews/*").permitAll()
+
+                        // 인증 필요
+                        .requestMatchers("/reviews/me").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/reviews").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/reviews/*").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/reviews/*").authenticated()
+
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(c -> {
                     c.authenticationEntryPoint((req, resp, e) -> {
-                        // 미로그인 상태에서 인가 실패시 호출
                         resp.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
                     });
 
                     c.accessDeniedHandler((req, resp, e) -> {
-                        // 로그인 상테에서 인가 실패시
                         resp.sendError(HttpStatus.FORBIDDEN.value(), e.getMessage());
                     });
                 });
