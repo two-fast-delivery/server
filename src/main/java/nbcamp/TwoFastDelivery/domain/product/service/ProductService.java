@@ -10,8 +10,8 @@ import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import nbcamp.TwoFastDelivery.domain.product.repository.ProductGroupRepository;
 import nbcamp.TwoFastDelivery.domain.product.repository.ProductRepository;
 import nbcamp.TwoFastDelivery.infrastructure.ai.GeminiClient;
-import nbcamp.TwoFastDelivery.domain.store.domain.Store;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRepository;
+import nbcamp.TwoFastDelivery.store.domain.Store;
+import nbcamp.TwoFastDelivery.store.domain.StoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
