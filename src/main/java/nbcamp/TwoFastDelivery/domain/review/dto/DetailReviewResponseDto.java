@@ -7,7 +7,6 @@ import nbcamp.TwoFastDelivery.domain.review.enums.ReviewStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// ->수정 요망 storeId,userId UUID
 @Getter
 @AllArgsConstructor
 public class DetailReviewResponseDto {
