@@ -80,8 +80,11 @@ Slack
 **Documentation**
 Swagger / OpenAPI
 
-
 📌 설계 특징
+도메인 중심 설계: global.common 구조를 통한 공통 관심사 분리 및 확장성 확보
+보안/인증 최적화: Spring Security + JWT 기반의 독립적인 인증 레이어 구현
+DB 버전 관리: DBeaver 기반의 DB 운영
+컨테이너 기반 협업: Docker를 활용해 로컬 개발 환경의 파편화 방지 및 환경 동일성 유지
 
 📄 API 문서
 http://localhost:8080/swagger-ui/index.html](http://43.200.251.132:8080/swagger-ui/index.html)
