@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.global.security;
+package nbcamp.TwoFastDelivery.global.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

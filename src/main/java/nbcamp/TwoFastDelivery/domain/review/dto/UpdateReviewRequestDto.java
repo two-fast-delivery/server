@@ -6,13 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
 public class UpdateReviewRequestDto {
-
-    @NotNull
-    private UUID userId;
 
     @NotNull
     @Min(1)

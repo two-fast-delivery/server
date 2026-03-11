@@ -32,8 +32,12 @@ public class MainController {
     @GetMapping("/test")
     public void test2() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof UserDetails) {
+
             log.info("UserDetails is : {}", ((UserDetails) authentication.getPrincipal()).getUsername());
+
         } else {
             log.info("UserDetails is null : 미로그인");
         }
