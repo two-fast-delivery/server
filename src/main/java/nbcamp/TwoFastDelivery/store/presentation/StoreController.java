@@ -57,7 +57,7 @@ public class StoreController {
         @RequestHeader(value = "User-Id", required = false)
         UUID userId
     ) {
-        CurrentUser user = new CurrentUser(userId, Set.of("CUSTOMER"));
+        CurrentUser user = new CurrentUser(userId, Set.of("MASTER"));
         StoreDetailResponse res = storeService.getStore(id, user);
         return ResponseEntity.ok(CommonResponse.success("가게 상세 조회 성공", res));
     }

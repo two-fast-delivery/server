@@ -39,6 +39,7 @@ public class ReviewService {
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)); //todo: 오류 만들기(오더 id에 해당하는 오더가 없음)
         Review review = Review.builder()
                 .userId(userId)
+                .storeId(order.getStoreId())
                 .orderId(requestDto.getOrderId())
                 .rating(requestDto.getRating())
                 .content(requestDto.getContent())
@@ -49,7 +50,7 @@ public class ReviewService {
 
         //이벤트 발행
         eventPublisher.publishEvent(
-                new ReviewCreatedEvent(review.getId(), review.getStoreId())
+                new ReviewCreatedEvent(savedReview.getId(), review.getStoreId())
         );
 
         CreateReviewResponseDto responseDto = new CreateReviewResponseDto(
@@ -112,7 +113,7 @@ public class ReviewService {
         //Todo: storeId 검증 작업? 필요할까?
         Pageable pageable = createPageable(page, size, sort);
 
-        Page<Review> reviewPage = reviewRepository.findReviewByStoreId(storeId, ReviewStatus.ACTIVE, pageable);
+        Page<Review> reviewPage = reviewRepository.findReviewByStoreIdAndStatus(storeId, ReviewStatus.ACTIVE, pageable);
 
         List<FindReviewByStoreResponseDto> reviews = reviewPage.getContent().stream()
                 .map(FindReviewByStoreResponseDto::from)

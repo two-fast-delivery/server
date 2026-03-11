@@ -18,7 +18,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //리뷰 생성
-    @PostMapping("/{userId}")
+    @PostMapping
     public ResponseEntity<?> createReview(@RequestHeader("userId") UUID userId,@Valid @RequestBody CreateReviewRequestDto requestDto) {
         CreateReviewResponseDto data = reviewService.createReview(userId, requestDto); //todo: PathVariable -> (requestHeader에서 token으로 UUID형태 userId받기)
 
