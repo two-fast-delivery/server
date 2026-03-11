@@ -21,11 +21,14 @@ public class Review extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
-    private Long userId; // -> 수정 요망 Long
+    @Column(nullable = false)
+    private UUID userId;
 
-    private Long storeId; // -> 수정 요망 Long
+    @Column(nullable = false)
+    private UUID storeId;
 
-    private Long orderId; // -> 수정 요망 Long, nullable = false 3개 다 처리
+    @Column(nullable = false)
+    private UUID orderId;
 
     @Column(nullable = false)
     private Integer rating;

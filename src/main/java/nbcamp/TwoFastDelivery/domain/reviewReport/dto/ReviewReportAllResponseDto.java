@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ReviewReportAllResponseDto {
     private UUID reportId;
     private UUID reviewId;
-    private Long userId;
+    private UUID userId;
     private String content;
     private ReviewReportStatus status;
 

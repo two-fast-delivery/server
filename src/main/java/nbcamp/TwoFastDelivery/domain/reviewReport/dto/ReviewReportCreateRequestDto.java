@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor  //-> 추후 다른 repuestDto에도 붙여야 함
+@NoArgsConstructor
 public class ReviewReportCreateRequestDto {
     @NotNull
     private String reportContent;

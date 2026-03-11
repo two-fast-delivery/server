@@ -9,7 +9,6 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class CreateReviewResponseDto {
-    private String storeName;
     private UUID reviewId;
     private Integer rating;
     private String content;

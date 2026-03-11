@@ -1,5 +1,6 @@
 package nbcamp.TwoFastDelivery.store.domain;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import jakarta.persistence.Column;

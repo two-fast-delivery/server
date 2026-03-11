@@ -12,7 +12,7 @@ import java.util.UUID;
 public class CreateReviewRequestDto {
 
     @NotNull
-    private Long orderId; //-->수정 요망 UUID로 바꾸기
+    private UUID orderId;
 
     @NotNull
     @Min(1)

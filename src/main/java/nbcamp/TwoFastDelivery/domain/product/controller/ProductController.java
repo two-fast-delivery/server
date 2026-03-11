@@ -47,33 +47,36 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<ProductResponse.Info> createProduct(
             @PathVariable UUID storeId,
+            @RequestHeader(value = "X-User-Id") UUID userId,
             @RequestBody ProductRequest.Create request) {
-        return CommonResponse.success("상품 생성 성공", productService.createProduct(storeId, request));
+        return CommonResponse.success("상품 생성 성공", productService.createProduct(storeId, userId, request));
     }
 
     @PatchMapping("/owner/stores/{storeId}/products/{productId}")
     public CommonResponse<ProductResponse.Info> updateProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
+            @RequestHeader(value = "X-User-Id") UUID userId,
             @RequestBody ProductRequest.Update request) {
-        return CommonResponse.success("상품 수정 성공", productService.updateProduct(productId, request));
+        return CommonResponse.success("상품 수정 성공", productService.updateProduct(storeId, productId, userId, request));
     }
 
     @DeleteMapping("/owner/stores/{storeId}/products/{productId}")
     public CommonResponse<Void> deleteProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
-            @RequestHeader(value = "X-User-Id") UUID deletedBy) {
-        productService.deleteProduct(productId, deletedBy);
+            @RequestHeader(value = "X-User-Id") UUID userId) {
+        productService.deleteProduct(storeId, productId, userId);
         return CommonResponse.success("상품 삭제 성공");
     }
 
     @PostMapping("/owner/stores/{storeId}/gen-description")
     public CommonResponse<String> generateProductDescriptionAI(
             @PathVariable UUID storeId,
+            @RequestHeader(value = "X-User-Id") UUID userId,
             @RequestBody ProductRequest.GenerateDescription request) {
         String generatedDescription = productService.generateProductDescriptionPreview(request.getPrompt(),
-                request.getImageUrl());
+                request.getImageUrl(), storeId.toString(), userId);
         return CommonResponse.success("상품 설명이 생성되었습니다.", generatedDescription);
     }
 
