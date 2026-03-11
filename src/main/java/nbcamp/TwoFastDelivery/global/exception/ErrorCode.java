@@ -22,7 +22,7 @@ public enum ErrorCode {
     REVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "주문 ID에 해당하는 리뷰가 이미 존재합니다."),
     REVIEW_NOT_EXISTS(HttpStatus.NOT_FOUND, "주문 ID에 해당하는 리뷰가 존재하지 않습니다."),
     REVIEW_NOT_ACTIVE(HttpStatus.NOT_FOUND, "리뷰가 활성화되어 있지 않습니다."),
-    REVIEW_NOT_EQUAL_USER(HttpStatus.FORBIDDEN, "리뷰 작성자만이 삭제가 가능합니다."),
+    REVIEW_NOT_EQUAL_USER(HttpStatus.FORBIDDEN, "리뷰 작성자만이 수정,삭제가 가능합니다."),
 
     //리뷰 신고
     REPORT_NOT_EXISTS(HttpStatus.NOT_FOUND, "신고 ID에 해당하는 리뷰가 존재하지 않습니다."),

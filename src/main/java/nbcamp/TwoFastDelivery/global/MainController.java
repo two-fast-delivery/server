@@ -31,12 +31,15 @@ public class MainController {
     @ResponseBody
     @GetMapping("/test")
     public void test2() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // Authentication -> 인증 정보 객체
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof UserDetails) {
+
             log.info("UserDetails is : {}", ((UserDetails) authentication.getPrincipal()).getUsername());
+
         } else {
             log.info("UserDetails is null : 미로그인");
         }
-
     }
 }
