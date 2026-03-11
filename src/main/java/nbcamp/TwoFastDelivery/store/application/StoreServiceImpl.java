@@ -33,6 +33,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public UUID createStore(StoreCreateRequest request, CurrentUser user) {
+      if (user == null || user.id() == null) {
+        throw new CustomException(ErrorCode.UNAUTHORIZED);
+      }
       Category category = categoryRepository.findById(request.getCategoryId())
       .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
