@@ -10,7 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "p_store_request")
 public class StoreRequest {
@@ -27,6 +29,8 @@ public class StoreRequest {
 
     @Column(name = "status", nullable = false)
     private StoreRequestStatus status;
+
+    StoreRequestType requestType;
     
     @PrePersist
     void prePersist() {
@@ -39,7 +43,8 @@ public class StoreRequest {
     public static StoreRequest createStoreRequest(Store store, String desc) {
         StoreRequest req = new StoreRequest();
         req.store = store;
-        req.store_desc = desc;
+        req.requestType = StoreRequestType.REGISTRATION;
+        req.store_desc = desc != null ? desc : "";
         req.status = StoreRequestStatus.PENDING;
         return req;
     }
@@ -52,5 +57,15 @@ public class StoreRequest {
         this.status = StoreRequestStatus.REJECTED;
     }
 
+    //삭제 요청용
+    public static StoreRequest createDeleteRequest(Store store, String reason) {
+        StoreRequest req = new StoreRequest();
+        req.store = store;
+        req.requestType = StoreRequestType.DELETE;
+        req.store_desc = reason != null ? reason : "";
+        req.status = StoreRequestStatus.PENDING;
+        
+        return req;
+    }
     /* ?유저 권한 변경? */
 }

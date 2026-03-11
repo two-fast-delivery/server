@@ -49,6 +49,12 @@ public class Address extends BaseEntity {
         return this.id != null ? this.id.getId() : null;
     }
 
+    public void validateOwner(UUID userId) {
+        if (this.getCreatedBy() != null && !this.getCreatedBy().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+    }
+
     private AddressId initializedId(UUID addressId) {
         if (addressId == null) {
             return AddressId.of();

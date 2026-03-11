@@ -1,6 +1,7 @@
 package nbcamp.TwoFastDelivery.global.exception;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -27,13 +29,12 @@ public class GlobalExceptionHandler {
         public ResponseEntity<CommonResponse<Void>> handleCustomException(CustomException e) {
                 ErrorCode ec = e.getErrorCode();
 
-                String resolvedMessage = messageSource.getMessage(ec.getMessage(), null, ec.getMessage(),
-                                LocaleContextHolder.getLocale());
-
-                return ResponseEntity
-                                .status(ec.getStatus())
-                                .body(CommonResponse.fail(resolvedMessage, ec.name()));
-        }
+        String resolvedMessage = messageSource.getMessage(ec.getMessage(), null, ec.getMessage(), LocaleContextHolder.getLocale());
+        log.error(e.getLocalizedMessage(), e);
+        return ResponseEntity
+                .status(ec.getStatus())
+                .body(CommonResponse.fail(resolvedMessage, ec.name()));
+    }
 
         /**
          * Valid 검증 실패 (RequestBody DTO)
@@ -44,24 +45,25 @@ public class GlobalExceptionHandler {
                                 .map(this::formatFieldError)
                                 .collect(Collectors.joining(", "));
 
-                // message는 사람이 읽기 쉬운 형태
-                return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(CommonResponse.fail(
-                                                details.isBlank() ? ErrorCode.INVALID_INPUT.getMessage() : details,
-                                                ErrorCode.INVALID_INPUT.name()));
+            // message는 사람이 읽기 쉬운 형태
+            log.error(e.getLocalizedMessage(), e);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CommonResponse.fail(details.isBlank() ? ErrorCode.INVALID_INPUT.getMessage() : details,
+                            ErrorCode.INVALID_INPUT.name()));
         }
 
-        /**
-         * JSON 파싱 실패 / Enum 파싱 실패 등 (요청 본문이 깨졌을 때)
-         */
-        @ExceptionHandler(HttpMessageNotReadableException.class)
-        public ResponseEntity<CommonResponse<Void>> handleNotReadable(HttpMessageNotReadableException e) {
-                return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(CommonResponse.fail(ErrorCode.JSON_PARSE_ERROR.getMessage(),
-                                                ErrorCode.JSON_PARSE_ERROR.name()));
-        }
+    /**
+     * JSON 파싱 실패 / Enum 파싱 실패 등 (요청 본문이 깨졌을 때)
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<CommonResponse<Void>> handleNotReadable(HttpMessageNotReadableException e) {
+        log.error(e.getLocalizedMessage(), e);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(CommonResponse.fail(ErrorCode.JSON_PARSE_ERROR.getMessage(),
+                        ErrorCode.JSON_PARSE_ERROR.name()));
+    }
 
         /**
          * 마지막 안전망: 예기치 못한 모든 예외

@@ -5,17 +5,22 @@ spring:
       max-request-size: 10MB
   application:
     name: TwoFastDelivery
+
   datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-  driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DB_DDL_AUTO}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
   messages:
     basename: messages
     encoding: UTF-8
@@ -33,11 +38,38 @@ spring:
           jdbc:
             initialize-schema: always
 
-# server:
-  # port: 8080
-
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: nbcamp.TwoFastDelivery.domain.product.dto
   configuration:
     map-underscore-to-camel-case: true
+
+# 로그 설정
+logging:
+  level:
+    org.hibernate.type: trace
+    org.hibernate.orm.jdbc.bind: trace
+
+# OPEN DOC API 설정
+springdoc:
+  version: '1.0.0'
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /api-docs.html
+    disable-swagger-default-url: true # 기본 URL 비활성화 (그룹 선택 유도)
+    doc-expansion: full
+    groups-order: asc                # 그룹 정렬 순서
+    display-request-duration: true   # 요청 소요 시간 표시
+  show-actuator: true
+  model-and-view-allowed: true
+  override-with-generic-response: true
+
+
+jwt:
+  secret: ${JSON_WEB_TOKEN_SECRET}
+  valid-time: ${JSON_WEB_TOKEN_VALID_TIME}
