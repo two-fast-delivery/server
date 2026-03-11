@@ -1,5 +1,3 @@
-<img width="1244" height="2528" alt="sparta_2" src="https://github.com/user-attachments/assets/f51d2bbe-9730-4f7e-b198-63b3808b72b2" />배달 주문 관리 커머스 플랫폼
-
 프로젝트 기간
 2026.02.24 ~ 2026.03.12
 
