@@ -32,8 +32,15 @@ public class OrderController {
     private final UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<UUID> createOrder(@RequestBody OrderDto orderDto) {
-        UUID orderId = orderService.createOrder(orderDto);
+    public ResponseEntity<UUID> createOrder(
+            @AuthenticationPrincipal UserDetails userDetails, // 1. 인증 정보 추가
+            @RequestBody OrderDto orderDto) {
+
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        // 2. 서비스에 userId 넘겨서 저장하도록 수정 (서비스 로직 수정 필요)
+        UUID orderId = orderService.createOrder(user.getUserId().getId(), orderDto);
         return ResponseEntity.ok(orderId);
     }
 
@@ -61,25 +68,30 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<String> cancelOrder(@PathVariable UUID orderId) {
-        try {
-            orderService.cancelOrder(orderId);
-            return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
-        } catch(IllegalStateException e){
-            //5분이 지났을 때
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> cancelOrder(
+            @AuthenticationPrincipal UserDetails userDetails, // 3. 누가 취소하는지 확인
+            @PathVariable UUID orderId) {
+
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        // 4. 서비스에서 "본인 주문인지" 확인하도록 userId 전달
+        orderService.cancelOrder(orderId, user.getUserId().getId(), user.getRole().name());
+        return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
     }
 
     @PatchMapping("/{orderId}/status")
-    public ResponseEntity<String> updateStatus(@PathVariable UUID orderId, @RequestParam OrderStatus status, @RequestAttribute UUID storeId) {
-        try {
-            orderService.updateOrderStatus(orderId, storeId, status);
-            return ResponseEntity.ok("주문 상태가 " + status.getDescription() + "으로 변경되었습니다.");
-        }catch (IllegalStateException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<String> updateStatus(
+            @AuthenticationPrincipal UserDetails userDetails, // 5. 상태 변경 권한 확인
+            @PathVariable UUID orderId,
+            @RequestParam OrderStatus status,
+            @RequestAttribute UUID storeId) {
+
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        // 6. 상태 변경 권한(가게 점주인지 등) 확인 로직 필요
+        orderService.updateOrderStatus(orderId, storeId, status, user.getRole().name());
+        return ResponseEntity.ok("주문 상태가 " + status.getDescription() + "으로 변경되었습니다.");
     }
-
-
 }
