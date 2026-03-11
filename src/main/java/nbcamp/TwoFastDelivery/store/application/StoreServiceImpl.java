@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,20 +7,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSearchCondition;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSummaryResponse;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreUpdateRequest;
-import nbcamp.TwoFastDelivery.domain.store.domain.Category;
-import nbcamp.TwoFastDelivery.domain.store.domain.CategoryRepository;
-import nbcamp.TwoFastDelivery.domain.store.domain.Store;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRepository;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequest;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequestRepository;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreStatus;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreCreateRequest;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreDetailResponse;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSearchCondition;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSummaryResponse;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreUpdateRequest;
+import nbcamp.TwoFastDelivery.store.domain.Category;
+import nbcamp.TwoFastDelivery.store.domain.CategoryRepository;
+import nbcamp.TwoFastDelivery.store.domain.Store;
+import nbcamp.TwoFastDelivery.store.domain.StoreRepository;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequest;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequestRepository;
+import nbcamp.TwoFastDelivery.store.domain.StoreStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +46,14 @@ public class StoreServiceImpl implements StoreService {
                                 request.getCloseTime(),
                                 request.getDescription()
                               );
-
       storeRepository.save(store);
 
       String desc = request.getStoreDesc() != null ? request.getStoreDesc() : "";
       StoreRequest storeRequest = StoreRequest.createStoreRequest(store, desc);
       storeRequestRepository.save(storeRequest);
+
+      store.changeStatus(StoreStatus.UNDER_REVIEW);
+      storeRepository.save(store);
 
       return store.getId();
     }
@@ -66,7 +68,7 @@ public class StoreServiceImpl implements StoreService {
                            
       // 노출 권한 확인
       if(store.getStatus() != StoreStatus.OPEN) {
-        boolean allowed = store.getUserId().equals(user.id()) || user.hasRole("OWNER");
+        boolean allowed = store.getUserId().equals(user.id()) || user.hasRole("MASTER");
         if(!allowed) {
           throw new CustomException(ErrorCode.FORBIDDEN);
         }
@@ -167,7 +169,7 @@ public class StoreServiceImpl implements StoreService {
         .name(store.getName())
         .address(store.getAddress())
         .thumbnailUrl(store.getThumbnail_url())
-        .categoryName("")// TODO: 추가필요
+        .categoryName(categoryName)
         .avgRating(store.getAvg_rating())
         .reviewCount(store.getReview_count())
         .build();
@@ -182,16 +184,7 @@ public class StoreServiceImpl implements StoreService {
 
       List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(user.id());
 
-      return stores.stream().map(store -> StoreSummaryResponse
-        .builder()
-        .id(store.getId())
-        .name(store.getName())
-        .address(store.getAddress())
-        .thumbnailUrl(store.getThumbnail_url())
-        .categoryName("") // TODO: 추가필요
-        .avgRating(store.getAvg_rating())
-        .reviewCount(store.getReview_count())
-        .build()).toList();
+      return stores.stream().map(this::toSummaryResponse).toList();
 
 
     }

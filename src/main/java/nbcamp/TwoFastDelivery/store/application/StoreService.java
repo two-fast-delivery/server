@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSearchCondition;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSummaryResponse;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreUpdateRequest;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreCreateRequest;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreDetailResponse;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSearchCondition;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSummaryResponse;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreUpdateRequest;
 
 
 

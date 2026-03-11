@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.presentation;
+package nbcamp.TwoFastDelivery.store.presentation;
 
 import java.util.Set;
 import java.util.UUID;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.store.application.CurrentUser;
-import nbcamp.TwoFastDelivery.domain.store.application.StoreRequestService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
+import nbcamp.TwoFastDelivery.store.application.CurrentUser;
+import nbcamp.TwoFastDelivery.store.application.StoreRequestService;
 
 @RestController
 @RequiredArgsConstructor

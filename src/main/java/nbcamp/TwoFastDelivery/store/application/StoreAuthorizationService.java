@@ -1,11 +1,12 @@
 // USER DTO 보고 수정 
 
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import org.springframework.stereotype.Service;
-import nbcamp.TwoFastDelivery.domain.store.domain.Store;
+
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import nbcamp.TwoFastDelivery.store.domain.Store;
 
 @Service
 public class StoreAuthorizationService {

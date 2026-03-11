@@ -1,8 +1,8 @@
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import java.util.UUID;
 
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreRequestDecisionRequest;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreRequestDecisionRequest;
 
 public interface StoreRequestService {
 

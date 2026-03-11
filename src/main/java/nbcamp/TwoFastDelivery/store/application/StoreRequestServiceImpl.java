@@ -1,20 +1,20 @@
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreRequestDecisionRequest;
-import nbcamp.TwoFastDelivery.domain.store.domain.Store;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRepository;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequest;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequestRepository;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequestStatus;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreRequestType;
-import nbcamp.TwoFastDelivery.domain.store.domain.StoreStatus;
 import nbcamp.TwoFastDelivery.global.exception.CustomException;
 import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreRequestDecisionRequest;
+import nbcamp.TwoFastDelivery.store.domain.Store;
+import nbcamp.TwoFastDelivery.store.domain.StoreRepository;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequest;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequestRepository;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequestStatus;
+import nbcamp.TwoFastDelivery.store.domain.StoreRequestType;
+import nbcamp.TwoFastDelivery.store.domain.StoreStatus;
 
 
 @RequiredArgsConstructor
@@ -35,6 +35,9 @@ public class StoreRequestServiceImpl implements StoreRequestService {
             throw new CustomException(ErrorCode.CONFLICT);
         }
         
+        store.changeStatus(StoreStatus.UNDER_REVIEW);
+        storeRepository.save(store);
+
         StoreRequest deleteRequest = StoreRequest.createDeleteRequest(store,"");
         storeRequestRepository.save(deleteRequest);
     }
@@ -72,6 +75,7 @@ public class StoreRequestServiceImpl implements StoreRequestService {
             store.changeStatus(StoreStatus.OPEN);
             storeRequest.approve();
         }else{
+            store.changeStatus(StoreStatus.PREPARING);
             storeRequest.reject(); // PREPARING 유지
         }
 
@@ -84,8 +88,10 @@ public class StoreRequestServiceImpl implements StoreRequestService {
 
         if(approved){
             store.delete(admin.id());
+            store.changeStatus(StoreStatus.SHUTDOWN);
             storeRequest.approve();
         }else{
+            store.changeStatus(StoreStatus.OPEN);
             storeRequest.reject(); 
         }
 

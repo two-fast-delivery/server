@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.application;
+package nbcamp.TwoFastDelivery.store.application;
 
 import java.util.Set;
 import java.util.UUID;

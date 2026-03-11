@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.presentation;
+package nbcamp.TwoFastDelivery.store.presentation;
 
 import java.util.List;
 import java.util.Set;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Sort;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nbcamp.TwoFastDelivery.domain.store.application.CurrentUser;
-import nbcamp.TwoFastDelivery.domain.store.application.StoreService;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreCreateRequest;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreDetailResponse;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSearchCondition;
-import nbcamp.TwoFastDelivery.domain.store.application.dto.StoreSummaryResponse;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
-
+import nbcamp.TwoFastDelivery.store.application.CurrentUser;
+import nbcamp.TwoFastDelivery.store.application.StoreService;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreCreateRequest;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreDetailResponse;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSearchCondition;
+import nbcamp.TwoFastDelivery.store.application.dto.StoreSummaryResponse;
 
 @RestController
 @RequestMapping("/stores")
@@ -38,76 +38,71 @@ public class StoreController {
 
     @PostMapping
     public ResponseEntity<CommonResponse<UUID>> create(
-        @RequestBody 
-        @Valid 
+        @RequestBody
+        @Valid
         StoreCreateRequest request,
         @RequestHeader(value = "User-Id", required = false)
-        UUID userId){
-        /*로그인 구현보고 수정 */
+        UUID userId
+    ) {
+        // TODO: JWT
         CurrentUser user = new CurrentUser(userId, Set.of("CUSTOMER"));
         UUID storeId = storeService.createStore(request, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponse.success("가게 등록 요청이 접수되었습니다.", storeId));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(CommonResponse.success("가게 등록 요청이 접수되었습니다.", storeId));
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<StoreDetailResponse>> get(
         @PathVariable UUID id,
         @RequestHeader(value = "User-Id", required = false)
-        UUID userId){
-
+        UUID userId
+    ) {
         CurrentUser user = new CurrentUser(userId, Set.of("CUSTOMER"));
         StoreDetailResponse res = storeService.getStore(id, user);
         return ResponseEntity.ok(CommonResponse.success("가게 상세 조회 성공", res));
-    
-    
     }
-    
+
     @GetMapping
     public ResponseEntity<CommonResponse<Page<StoreSummaryResponse>>> getStores(
-        @RequestParam(required = false)UUID categoryId,
-        @RequestParam(required = false)String keyword,
-        @RequestParam(defaultValue = "0")int page,
-        @RequestParam(defaultValue = "0")int size,
-        @RequestParam(defaultValue = "createdAt,desc")String sort,
-        @RequestParam(value = "User-Id", required = false)UUID userId,
-        @RequestHeader("Authorization") String authHeader
-    ){
+        @RequestParam(required = false) UUID categoryId,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "createdAt,desc") String sort,
+        @RequestHeader(value = "User-Id", required = false) UUID userId
+    ) {
         CurrentUser user = new CurrentUser(userId, Set.of("CUSTOMER"));
-        //CurrentUser user = CurrentUserResolver.from(authHeader);
 
-        if(size != 10&& size != 30 && size != 50){
+        // size 허용값 제한
+        if (size != 10 && size != 30 && size != 50) {
             size = 10;
         }
-
 
         StoreSearchCondition condition = new StoreSearchCondition();
         condition.setCategoryId(categoryId);
         condition.setKeyword(keyword);
         condition.setSort(sort);
-        
 
-        Sort sortOption = Sort.by("createdAt").descending();
-        if("rating".equalsIgnoreCase(sort)){
-            sortOption = Sort.by("avg_rating").descending();
-        }else if("reviewCount".equalsIgnoreCase(sort)){
-            sortOption = Sort.by("review_count").descending();
+        String[] parts = sort.split(",");
+        String sortKey = parts[0];
+        String direction = parts.length > 1 ? parts[1] : "desc"; // 
+
+        String property = "createdAt"; // 
+        if ("rating".equalsIgnoreCase(sortKey)) {
+            property = "avg_rating";
+        } else if ("reviewCount".equalsIgnoreCase(sortKey)) {
+            property = "review_count";
         }
 
+        // asc / desc 방향 지정 (기본 desc)
+        Sort.Direction dir =
+            "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sortOption = Sort.by(dir, property);
 
         Pageable pageable = PageRequest.of(page, size, sortOption);
 
         Page<StoreSummaryResponse> result = storeService.getStores(condition, pageable, user);
-
         return ResponseEntity.ok(CommonResponse.success("가게 목록 조회 성공", result));
-    }
-
-    public ResponseEntity<CommonResponse<List<StoreSummaryResponse>>> getMyStores(
-        @RequestHeader(value = "User-Id", required = false)UUID userId
-    ){
-        CurrentUser user = new CurrentUser(userId, Set.of("OWNER"));
-        List<StoreSummaryResponse> result = storeService.getMyStores(user);
-
-        return ResponseEntity.ok(CommonResponse.success("내 가게 목록 조회 성공", result));
     }
 }

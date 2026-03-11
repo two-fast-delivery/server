@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.domain;
+package nbcamp.TwoFastDelivery.store.domain;
 
 public enum StoreStatus {
     OPEN,          // 영업 중

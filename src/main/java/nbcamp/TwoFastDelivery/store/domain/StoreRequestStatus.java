@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.domain.store.domain;
+package nbcamp.TwoFastDelivery.store.domain;
 
 public enum StoreRequestStatus {
     PENDING,  // 심사 중
