@@ -36,7 +36,7 @@ public class ReviewService {
     //TODO:인증 기능 작동 시 토큰에서 userId 발급, error 추가
     public CreateReviewResponseDto createReview(UUID userId, CreateReviewRequestDto requestDto) {
         Order order = orderRepository.findById(requestDto.getOrderId())
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)); //todo: 오류 만들기(오더 id에 해당하는 오더가 없음)
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
         Review review = Review.builder()
                 .userId(userId)
                 .storeId(order.getStoreId())
