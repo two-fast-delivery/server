@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_DB: twofastdelivery
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_NAME: twofastdelivery
+      DB_URL: jdbc:postgresql://db:5432/twofastdelivery
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - db

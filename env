@@ -1,0 +1,14 @@
+# Database
+DB_NAME=twofast
+DB_USER=postgres
+DB_PASSWORD=1234
+DB_PORT=5432
+DB_URL=jdbc:postgresql://localhost:5432/twofast
+DB_DDL_AUTO=create
+
+# Gemini AI
+GEMINI_API_KEY=여기에_네_실제_API_KEY_붙여넣기
+
+# JWT
+JSON_WEB_TOKEN_SECRET=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd6eXoxMjMxMjMxMjMxMjMxMjMxMzEyMzEyMzEzMTIzMTIzMTIzMTMxMjMxMzEzMTMxMjM
+JSON_WEB_TOKEN_VALID_TIME=3600
