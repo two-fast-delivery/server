@@ -20,6 +20,18 @@ spring:
     basename: messages
     encoding: UTF-8
     always-use-message-format: true
+  ai:
+    openai:
+      api-key: ${GEMINI_API_KEY}
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai/
+      chat:
+        options:
+          model: "gemini-3.1-flash-lite-preview"
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
 
 # server:
   # port: 8080
@@ -29,8 +41,3 @@ mybatis:
   type-aliases-package: nbcamp.TwoFastDelivery.domain.product.dto
   configuration:
     map-underscore-to-camel-case: true
-
-gemini:
-  api:
-    key: ${GEMINI_API_KEY}
-    url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent"
