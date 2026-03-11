@@ -78,9 +78,9 @@ public class Order extends BaseEntity {
         this.status = status;
     }
 
-    public void addOrderDetail(OrderDetail Detail) {
-        this.orderDetails.add(Detail);
-        Detail.setOrder(this);
+    public void addOrderDetail(OrderDetail detail) {
+        this.orderDetails.add(detail);
+        detail.setOrder(this);
     }
 
     public void cancel(){
