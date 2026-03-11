@@ -1,4 +1,4 @@
-package nbcamp.TwoFastDelivery.global.config.secrity;
+package nbcamp.TwoFastDelivery.global.config.security;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.TwoFastDelivery.auth.infrastructure.JwtFilter;

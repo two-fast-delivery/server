@@ -3,6 +3,7 @@ package nbcamp.TwoFastDelivery.global.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,5 +24,13 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/" + uploadDir + "/**")
                 // 위에서 계산한 실제 파일 경로에서 파일을 찾아 보여줌
                 .addResourceLocations(uploadAbsolutePath);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*");
     }
 }
