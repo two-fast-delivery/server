@@ -6,6 +6,8 @@ import nbcamp.TwoFastDelivery.domain.product.dto.response.ProductOptionResponse;
 import nbcamp.TwoFastDelivery.domain.product.service.ProductOptionService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,8 +24,10 @@ public class ProductOptionController {
     public CommonResponse<ProductOptionResponse.OptionInfo> createOption(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProductOptionRequest.CreateOption request) {
-        return CommonResponse.success("옵션 생성 성공", optionService.createOption(productId, request));
+        String username = userDetails.getUsername();
+        return CommonResponse.success("옵션 생성 성공", optionService.createOption(storeId, productId, username, request));
     }
 
     @PatchMapping("/owner/stores/{storeId}/products/{productId}/options/{optionId}")
@@ -31,8 +35,10 @@ public class ProductOptionController {
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
             @PathVariable UUID optionId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProductOptionRequest.CreateOption request) {
-        return CommonResponse.success("옵션 수정 성공", optionService.updateOption(optionId, request));
+        String username = userDetails.getUsername();
+        return CommonResponse.success("옵션 수정 성공", optionService.updateOption(storeId, productId, optionId, username, request));
     }
 
     @DeleteMapping("/owner/stores/{storeId}/products/{productId}/options/{optionId}")
@@ -40,8 +46,9 @@ public class ProductOptionController {
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
             @PathVariable UUID optionId,
-            @RequestHeader(value = "X-User-Id") UUID deletedBy) {
-        optionService.deleteOption(optionId, deletedBy);
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        optionService.deleteOption(storeId, productId, optionId, username);
         return CommonResponse.success("옵션 삭제 성공");
     }
 }

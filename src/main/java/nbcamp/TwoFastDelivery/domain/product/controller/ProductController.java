@@ -6,9 +6,10 @@ import nbcamp.TwoFastDelivery.domain.product.dto.response.ProductResponse;
 import nbcamp.TwoFastDelivery.domain.product.service.ProductQueryService;
 import nbcamp.TwoFastDelivery.domain.product.service.ProductService;
 import nbcamp.TwoFastDelivery.global.common.CommonResponse;
-import nbcamp.TwoFastDelivery.global.exception.CustomException;
-import nbcamp.TwoFastDelivery.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,51 +48,51 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<ProductResponse.Info> createProduct(
             @PathVariable UUID storeId,
-            @RequestHeader(value = "X-User-Id") UUID userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProductRequest.Create request) {
-        return CommonResponse.success("상품 생성 성공", productService.createProduct(storeId, userId, request));
+        String username = userDetails.getUsername();
+        return CommonResponse.success("상품 생성 성공", productService.createProduct(storeId, username, request));
     }
 
     @PatchMapping("/owner/stores/{storeId}/products/{productId}")
     public CommonResponse<ProductResponse.Info> updateProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
-            @RequestHeader(value = "X-User-Id") UUID userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProductRequest.Update request) {
-        return CommonResponse.success("상품 수정 성공", productService.updateProduct(storeId, productId, userId, request));
+        String username = userDetails.getUsername();
+        return CommonResponse.success("상품 수정 성공", productService.updateProduct(storeId, productId, username, request));
     }
 
     @DeleteMapping("/owner/stores/{storeId}/products/{productId}")
     public CommonResponse<Void> deleteProduct(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
-            @RequestHeader(value = "X-User-Id") UUID userId) {
-        productService.deleteProduct(storeId, productId, userId);
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        productService.deleteProduct(storeId, productId, username);
         return CommonResponse.success("상품 삭제 성공");
     }
 
     @PostMapping("/owner/stores/{storeId}/gen-description")
     public CommonResponse<String> generateProductDescriptionAI(
             @PathVariable UUID storeId,
-            @RequestHeader(value = "X-User-Id") UUID userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ProductRequest.GenerateDescription request) {
+        String username = userDetails.getUsername();
         String generatedDescription = productService.generateProductDescriptionPreview(request.getPrompt(),
-                request.getImageUrl(), storeId.toString(), userId);
+                request.getImageUrl(), storeId.toString(), username);
         return CommonResponse.success("상품 설명이 생성되었습니다.", generatedDescription);
     }
 
     // [ADMIN]
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/stores/{storeId}/products/{productId}")
     public CommonResponse<String> requestProductModification(
             @PathVariable UUID storeId,
             @PathVariable UUID productId,
-            @RequestHeader(value = "X-Role", defaultValue = "USER") String role,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody Object reasonDummy) {
-
-        // Admin 권한 확인
-        if (!"ADMIN".equalsIgnoreCase(role)) {
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
 
         productService.requestProductModification(productId, reasonDummy);
 

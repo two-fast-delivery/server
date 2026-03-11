@@ -28,6 +28,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductGroupRepository productGroupRepository;
     private final StoreRepository storeRepository;
+    private final nbcamp.TwoFastDelivery.user.domain.user.UserRepository userRepository;
     private final GeminiClient geminiClient;
 
     /**
@@ -39,9 +40,9 @@ public class ProductService {
      * @return 생성된 상품의 상세 정보
      */
     @Transactional
-    public ProductResponse.Info createProduct(UUID storeId, UUID userId, ProductRequest.Create request) {
-        // TODO: JWT 미완성으로 인한 주석 처리
-        // validateStoreOwnershipForCreation(storeId, userId);
+    public ProductResponse.Info createProduct(UUID storeId, String username, ProductRequest.Create request) {
+        UUID userId = resolveUserId(username);
+        validateStoreOwnershipForCreation(storeId, userId);
         UUID groupId = resolveProductGroupId(storeId, request.getProductGroupId(), request.getProductGroupName());
 
         String finalDescription = request.getDescription();
@@ -116,7 +117,9 @@ public class ProductService {
      * @return 수정이 완료된 상품의 상세 정보
      */
     @Transactional
-    public ProductResponse.Info updateProduct(UUID storeId, UUID productId, UUID userId, ProductRequest.Update request) {
+    public ProductResponse.Info updateProduct(UUID storeId, UUID productId, String username,
+            ProductRequest.Update request) {
+        UUID userId = resolveUserId(username);
         Product product = getProductEntity(productId);
         validateStoreOwnership(product, storeId, userId);
         UUID groupId = resolveProductGroupId(product.getStoreId(), request.getProductGroupId(),
@@ -143,7 +146,9 @@ public class ProductService {
      * @return 상태가 변경된 상품의 상세 정보
      */
     @Transactional
-    public ProductResponse.Info changeProductStatus(UUID storeId, UUID productId, UUID userId, ProductRequest.ChangeStatus request) {
+    public ProductResponse.Info changeProductStatus(UUID storeId, UUID productId, String username,
+            ProductRequest.ChangeStatus request) {
+        UUID userId = resolveUserId(username);
         Product product = getProductEntity(productId);
         validateStoreOwnership(product, storeId, userId);
         product.changeStatus(Product.ProductStatus.valueOf(request.getStatus()));
@@ -169,7 +174,8 @@ public class ProductService {
      * @param deletedBy 삭제를 수행한 사용자의 식별자 (또는 이름)
      */
     @Transactional
-    public void deleteProduct(UUID storeId, UUID productId, UUID userId) {
+    public void deleteProduct(UUID storeId, UUID productId, String username) {
+        UUID userId = resolveUserId(username);
         Product product = getProductEntity(productId);
         validateStoreOwnership(product, storeId, userId);
         // Soft Delete
@@ -195,7 +201,7 @@ public class ProductService {
      * @return 조회된 상품 엔티티
      * @throws IllegalArgumentException 상품을 찾을 수 없을 때 발생
      */
-    private Product getProductEntity(UUID productId) {
+    public Product getProductEntity(UUID productId) {
         return productRepository.findByIdAndDeletedAtIsNull(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
@@ -205,16 +211,16 @@ public class ProductService {
      *
      * @param product 확인할 상품 엔티티
      * @param storeId 요청한 상점 ID
-     * @param userId 요청한 유저 ID
+     * @param userId  요청한 유저 ID
      */
-    private void validateStoreOwnership(Product product, UUID storeId, UUID userId) {
+    public void validateStoreOwnership(Product product, UUID storeId, UUID userId) {
         if (!product.getStoreId().equals(storeId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
-        
+
         Store store = storeRepository.findByIdAndDeletedAtIsNull(storeId)
-            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-            
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
         if (!store.getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
@@ -223,16 +229,14 @@ public class ProductService {
     /**
      * 상점이 요청한 유저의 소유인지 확인합니다. (새 상품 생성 시 사용)
      */
-    /* TODO: JWT 미완성으로 인한 주석 처리
-    private void validateStoreOwnershipForCreation(UUID storeId, UUID userId) {
+    public void validateStoreOwnershipForCreation(UUID storeId, UUID userId) {
         Store store = storeRepository.findByIdAndDeletedAtIsNull(storeId)
-            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-            
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
         if (!store.getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
     }
-    */
 
     /**
      * 상품 등록 및 수정 시 필요한 상품 그룹 ID를 결정합니다.
@@ -284,9 +288,9 @@ public class ProductService {
         return ProductResponse.Info.fromEntity(product, groupName);
     }
 
-    public String generateProductDescriptionPreview(String prompt, String imageUrl, String storeId, UUID userId) {
-        // TODO: JWT 미완성으로 인한 주석 처리
-        // validateStoreOwnershipForCreation(UUID.fromString(storeId), userId);
+    public String generateProductDescriptionPreview(String prompt, String imageUrl, String storeId, String username) {
+        UUID userId = resolveUserId(username);
+        validateStoreOwnershipForCreation(UUID.fromString(storeId), userId);
         validatePromptLength(prompt);
         return geminiClient.generateDescription(prompt, imageUrl, storeId);
     }
@@ -295,5 +299,10 @@ public class ProductService {
         if (prompt != null && prompt.length() > 100) {
             throw new CustomException(ErrorCode.INVALID_PRODUCT_DATA);
         }
+    }
+    public UUID resolveUserId(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND))
+                .getUserId().getId();
     }
 }
