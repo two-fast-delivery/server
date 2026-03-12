@@ -296,17 +296,15 @@ http://43.200.251.132:8080/swagger-ui/index.html
 ### 환경 변수
 
 ```
-DB_URL=jdbc:postgresql://localhost:5432/twofastdelivery
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_URL=
+DB_USER=
+DB_PASSWORD=
 
-JWT_SECRET=your-secret-key
+JSON_WEB_TOKEN_SECRET=
+JSON_WEB_TOKEN_VALID_TIME=3600
 
-AWS_ACCESS_KEY=
-AWS_SECRET_KEY=
-AWS_S3_BUCKET=
+GEMINI_API_KEY=
 ```
-
 ### 실행
 
 ```
