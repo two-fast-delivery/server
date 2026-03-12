@@ -20,9 +20,14 @@ public class ProductOptionService {
 
     private final ProductOptionGroupRepository optionGroupRepository;
     private final ProductOptionRepository optionRepository;
+    private final ProductService productService;
 
     @Transactional
-    public ProductOptionResponse.OptionInfo createOption(UUID productId, ProductOptionRequest.CreateOption request) {
+    public ProductOptionResponse.OptionInfo createOption(UUID storeId, UUID productId, String username, ProductOptionRequest.CreateOption request) {
+        UUID userId = productService.resolveUserId(username);
+        // 권한 확인
+        productService.validateStoreOwnership(productService.getProductEntity(productId), storeId, userId);
+
         // 그룹 이름이 제공된 경우, 기존 그룹을 찾거나 새로 생성
         ProductOptionGroup group;
         if (request.getGroupName() != null && !request.getGroupName().isEmpty()) {
@@ -50,8 +55,12 @@ public class ProductOptionService {
     }
 
     @Transactional
-    public ProductOptionResponse.OptionInfo updateOption(UUID optionId, ProductOptionRequest.CreateOption request) {
+    public ProductOptionResponse.OptionInfo updateOption(UUID storeId, UUID productId, UUID optionId, String username, ProductOptionRequest.CreateOption request) {
+        UUID userId = productService.resolveUserId(username);
         ProductOption option = getOptionEntity(optionId);
+        
+        // 권한 확인
+        productService.validateStoreOwnership(productService.getProductEntity(productId), storeId, userId);
 
         // 함께 연결된 옵션 그룹 수정 로직
         if (request.getGroupName() != null && !request.getGroupName().isEmpty()) {
@@ -70,9 +79,14 @@ public class ProductOptionService {
     }
 
     @Transactional
-    public void deleteOption(UUID optionId, UUID deletedBy) {
+    public void deleteOption(UUID storeId, UUID productId, UUID optionId, String username) {
+        UUID userId = productService.resolveUserId(username);
         ProductOption option = getOptionEntity(optionId);
-        option.delete(deletedBy);
+        
+        // 권한 확인
+        productService.validateStoreOwnership(productService.getProductEntity(productId), storeId, userId);
+
+        option.delete(userId);
 
         // 방금 삭제한 옵션을 제외하고, 부모 그룹에 다른 '유효한(삭제되지 않은)' 옵션이 남아있는지 확인
         boolean hasOtherOptions = optionRepository.existsByGroupIdAndDeletedAtIsNullAndIdNot(option.getGroupId(),
@@ -81,7 +95,7 @@ public class ProductOptionService {
         if (!hasOtherOptions) {
             // 다른 옵션이 없다면 부모 옵션 그룹도 함께 삭제
             ProductOptionGroup group = getOptionGroupEntity(option.getGroupId());
-            group.delete(deletedBy);
+            group.delete(userId);
         }
     }
 
